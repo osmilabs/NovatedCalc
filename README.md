@@ -5,7 +5,7 @@ Next.js + PocketBase MVP for Australian novated lease estimate and provider comp
 ## Stack
 
 - Next.js App Router (server-rendered pages)
-- PocketBase (manual provider CMS + lead storage)
+- PocketBase (manual provider CMS + assumptions + SEO content)
 - TypeScript
 - Vitest (smoke test for estimator)
 

@@ -2,10 +2,12 @@ import type { CalculatorAssumptions, Provider, SeoPage } from "@/lib/types";
 
 export const defaultAssumptions: CalculatorAssumptions = {
   gstRate: 0.1,
+  novatedLeaseInterestRateAnnual: 0.085,
+  carLoanInterestRateAnnual: 0.0725,
   adminFeeMonthly: 49,
   insuranceMonthly: 120,
   maintenanceMonthly: 65,
-  evFbtDiscount: 0.12,
+  evFbtExemptionBenefitRate: 0.12,
   fuelAndRunningRatePerKm: 0.11,
   registrationMonthly: 95,
 };
@@ -109,9 +111,9 @@ export const fallbackSeoPages: SeoPage[] = [
     keyword: "best novated lease provider Australia",
     title: "Best Novated Lease Provider Australia - What Actually Matters",
     description:
-      "Compare provider inclusions, fees, and service quality before requesting quotes.",
+      "Compare provider inclusions, fees, and service quality with an estimate-first flow.",
     hero: "Best Novated Lease Provider Australia",
-    body: "The best provider depends on your employer, state and service preference. Compare inclusions, setup fees, and quote speed before sharing your details.",
+    body: "The best provider depends on your employer, state and service preference. Compare inclusions, setup fees, and quote speed before choosing your shortlist.",
     faq: [
       {
         question: "Is there one best provider for everyone?",
@@ -124,13 +126,13 @@ export const fallbackSeoPages: SeoPage[] = [
     keyword: "novated lease without phone number",
     title: "Novated Lease Without Phone Number - Research First",
     description:
-      "See estimate results and provider comparisons before deciding if you want contact.",
+      "See estimate results and provider comparisons without submitting personal contact details.",
     hero: "Research Novated Lease Options Without Calls First",
-    body: "Use the calculator and comparison tables before opting into provider outreach.",
+    body: "Use the calculator and comparison tables to evaluate options privately before any external quote process.",
     faq: [
       {
         question: "Do I need to provide a phone number?",
-        answer: "For this MVP flow, phone is optional unless a provider requires it for final quote validation.",
+        answer: "No. This app does not collect phone numbers or contact details in its core flow.",
       },
     ],
   },

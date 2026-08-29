@@ -26,8 +26,6 @@ export async function getProviders(): Promise<Provider[]> {
       responsivenessScore: record.responsivenessScore ?? 0,
       supportChannels: record.supportChannels ?? [],
       affiliateLink: record.affiliateLink ?? undefined,
-      outboundWebhookUrl: record.outboundWebhookUrl ?? undefined,
-      outboundEmail: record.outboundEmail ?? undefined,
       summary: record.summary ?? "",
       active: !!record.active,
     }));

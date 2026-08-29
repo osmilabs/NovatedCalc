@@ -10,20 +10,26 @@ export type CalculatorInput = {
 
 export type CalculatorAssumptions = {
   gstRate: number;
+  novatedLeaseInterestRateAnnual: number;
+  carLoanInterestRateAnnual: number;
   adminFeeMonthly: number;
   insuranceMonthly: number;
   maintenanceMonthly: number;
-  evFbtDiscount: number;
+  evFbtExemptionBenefitRate: number;
   fuelAndRunningRatePerKm: number;
   registrationMonthly: number;
 };
 
 export type CalculatorResult = {
-  monthlyLeaseCost: number;
-  monthlyPackageCost: number;
-  monthlyTakeHomeImpact: number;
-  estimatedAnnualSavings: number;
-  estimatedTermSavings: number;
+  novatedLeaseMonthlyTakeHomeImpact: number;
+  carLoanMonthlyCost: number;
+  monthlyDifference: number;
+  termDifference: number;
+  residualDueAtEnd: number;
+  novatedLeaseMonthlyPackageCost: number;
+  novatedLeaseMonthlyFinanceCost: number;
+  carLoanMonthlyFinanceCost: number;
+  comparisonLabel: "nl-ahead" | "loan-ahead" | "too-close";
 };
 
 export type Provider = {
@@ -38,22 +44,8 @@ export type Provider = {
   responsivenessScore: number;
   supportChannels: string[];
   affiliateLink?: string;
-  outboundWebhookUrl?: string;
-  outboundEmail?: string;
   summary: string;
   active: boolean;
-};
-
-export type LeadPayload = {
-  fullName: string;
-  email: string;
-  phone?: string;
-  postcode: string;
-  state: string;
-  preferredProviderSlugs: string[];
-  consentAccepted: boolean;
-  calculatorInput: CalculatorInput;
-  calculatorResult: CalculatorResult;
 };
 
 export type SeoPage = {

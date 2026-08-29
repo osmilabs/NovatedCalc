@@ -6,7 +6,7 @@ import { getPocketBaseClient } from "@/lib/pocketbase";
 export const metadata: Metadata = {
   title: "Novated Lease Calculator Australia",
   description:
-    "Estimate monthly cost, take-home impact, and potential novated lease savings in Australia.",
+    "Compare novated lease and car loan outcomes with clear assumptions and minimal inputs.",
 };
 
 async function getAssumptions() {
@@ -17,10 +17,16 @@ async function getAssumptions() {
     const record = await client.collection("calculator_assumptions").getFirstListItem("active = true");
     return {
       gstRate: record.gstRate ?? defaultAssumptions.gstRate,
+      novatedLeaseInterestRateAnnual:
+        record.novatedLeaseInterestRateAnnual ?? defaultAssumptions.novatedLeaseInterestRateAnnual,
+      carLoanInterestRateAnnual: record.carLoanInterestRateAnnual ?? defaultAssumptions.carLoanInterestRateAnnual,
       adminFeeMonthly: record.adminFeeMonthly ?? defaultAssumptions.adminFeeMonthly,
       insuranceMonthly: record.insuranceMonthly ?? defaultAssumptions.insuranceMonthly,
       maintenanceMonthly: record.maintenanceMonthly ?? defaultAssumptions.maintenanceMonthly,
-      evFbtDiscount: record.evFbtDiscount ?? defaultAssumptions.evFbtDiscount,
+      evFbtExemptionBenefitRate:
+        record.evFbtExemptionBenefitRate ??
+        record.evFbtDiscount ??
+        defaultAssumptions.evFbtExemptionBenefitRate,
       fuelAndRunningRatePerKm: record.fuelAndRunningRatePerKm ?? defaultAssumptions.fuelAndRunningRatePerKm,
       registrationMonthly: record.registrationMonthly ?? defaultAssumptions.registrationMonthly,
     };
@@ -36,7 +42,7 @@ export default async function CalculatorPage() {
       <section className="glass-card hero">
         <h1>Novated lease calculator</h1>
         <p className="muted">
-          Estimate monthly package cost, take-home impact and potential savings before requesting quotes.
+          Compare a novated lease with a standard car loan using conservative assumptions and minimal inputs.
         </p>
       </section>
       <CalculatorForm assumptions={assumptions} />

@@ -4,34 +4,74 @@ function round(n: number) {
   return Math.round(n * 100) / 100;
 }
 
+function monthlyPayment(principal: number, annualRate: number, months: number) {
+  if (months <= 0) return 0;
+  if (annualRate <= 0) return principal / months;
+  const monthlyRate = annualRate / 12;
+  const factor = (1 + monthlyRate) ** months;
+  return principal * ((monthlyRate * factor) / (factor - 1));
+}
+
+function getResidualRate(termMonths: number) {
+  if (termMonths >= 60) return 0.2;
+  if (termMonths >= 48) return 0.28;
+  if (termMonths >= 36) return 0.37;
+  return 0.46;
+}
+
+function getMarginalTaxRate(salary: number) {
+  if (salary >= 180000) return 0.45;
+  if (salary >= 120000) return 0.37;
+  if (salary >= 45000) return 0.325;
+  return 0.19;
+}
+
 export function estimateNovatedLease(
   input: CalculatorInput,
   assumptions: CalculatorAssumptions,
 ): CalculatorResult {
-  const residualRate = input.leaseTermMonths >= 48 ? 0.28 : input.leaseTermMonths >= 36 ? 0.37 : 0.46;
-  const financedAmount = input.carPrice * (1 - residualRate);
-  const monthlyLeaseCost = financedAmount / input.leaseTermMonths;
+  const termMonths = Math.max(1, input.leaseTermMonths);
+  const residualRate = getResidualRate(termMonths);
+  const residualDueAtEnd = input.carPrice * residualRate;
+  const financedAmount = Math.max(0, input.carPrice - residualDueAtEnd);
+  const marginalTaxRate = getMarginalTaxRate(input.salary);
+
+  const nlMonthlyFinanceCost = monthlyPayment(
+    financedAmount,
+    assumptions.novatedLeaseInterestRateAnnual,
+    termMonths,
+  );
   const runningMonthly =
     assumptions.insuranceMonthly +
     assumptions.maintenanceMonthly +
     assumptions.registrationMonthly +
     (input.kilometresPerYear / 12) * assumptions.fuelAndRunningRatePerKm;
-  const monthlyPackageCost = monthlyLeaseCost + assumptions.adminFeeMonthly + runningMonthly;
 
-  const marginalTaxRate = input.salary >= 180000 ? 0.45 : input.salary >= 120000 ? 0.37 : input.salary >= 45000 ? 0.325 : 0.19;
-  const gstBenefit = monthlyPackageCost * assumptions.gstRate;
-  const fbtFactor = input.vehicleType === "ev" ? assumptions.evFbtDiscount : 0;
-  const taxBenefit = monthlyPackageCost * (marginalTaxRate + fbtFactor);
+  const nlMonthlyPackageCost = nlMonthlyFinanceCost + assumptions.adminFeeMonthly + runningMonthly;
+  const nlPreTaxSaving = nlMonthlyPackageCost * marginalTaxRate;
+  const nlGstSaving = nlMonthlyPackageCost * assumptions.gstRate;
+  const nlEvBenefit =
+    input.vehicleType === "ev" ? nlMonthlyPackageCost * assumptions.evFbtExemptionBenefitRate : 0;
+  const novatedLeaseMonthlyTakeHomeImpact =
+    nlMonthlyPackageCost - nlPreTaxSaving - nlGstSaving - nlEvBenefit;
 
-  const monthlyTakeHomeImpact = monthlyPackageCost - taxBenefit - gstBenefit;
-  const estimatedAnnualSavings = (monthlyPackageCost - monthlyTakeHomeImpact) * 12;
-  const estimatedTermSavings = estimatedAnnualSavings * (input.leaseTermMonths / 12);
+  const carLoanMonthlyFinanceCost = monthlyPayment(financedAmount, assumptions.carLoanInterestRateAnnual, termMonths);
+  const carLoanMonthlyCost = carLoanMonthlyFinanceCost + runningMonthly;
+
+  const monthlyDifference = carLoanMonthlyCost - novatedLeaseMonthlyTakeHomeImpact;
+  const termDifference = monthlyDifference * termMonths;
+  const comparisonLabel =
+    Math.abs(monthlyDifference) < 25 ? "too-close" : monthlyDifference > 0 ? "nl-ahead" : "loan-ahead";
 
   return {
-    monthlyLeaseCost: round(monthlyLeaseCost),
-    monthlyPackageCost: round(monthlyPackageCost),
-    monthlyTakeHomeImpact: round(monthlyTakeHomeImpact),
-    estimatedAnnualSavings: round(estimatedAnnualSavings),
-    estimatedTermSavings: round(estimatedTermSavings),
+    novatedLeaseMonthlyTakeHomeImpact: round(novatedLeaseMonthlyTakeHomeImpact),
+    carLoanMonthlyCost: round(carLoanMonthlyCost),
+    monthlyDifference: round(monthlyDifference),
+    termDifference: round(termDifference),
+    residualDueAtEnd: round(residualDueAtEnd),
+    novatedLeaseMonthlyPackageCost: round(nlMonthlyPackageCost),
+    novatedLeaseMonthlyFinanceCost: round(nlMonthlyFinanceCost),
+    carLoanMonthlyFinanceCost: round(carLoanMonthlyFinanceCost),
+    comparisonLabel,
   };
 }

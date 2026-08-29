@@ -9,7 +9,7 @@ export default async function HomePage() {
       <section className="glass-card hero">
         <h1>Australian novated lease comparison without fake live rates</h1>
         <p className="muted">
-          See estimate-based lease impact first, compare providers by real service factors, then choose if you want outreach.
+          See estimate-based lease impact first, then compare providers by service quality and package structure.
         </p>
         <div className="grid-two">
           <Link className="btn-primary" href="/novated-lease-calculator">
@@ -25,8 +25,8 @@ export default async function HomePage() {
         <h2>Why this is different</h2>
         <ul>
           <li>Manual provider profiles instead of pretending to have live lease rates.</li>
-          <li>Estimate-first UX so users get value before lead capture.</li>
-          <li>Optional phone field for users who want low-contact research.</li>
+          <li>Estimate-first UX gives useful results immediately.</li>
+          <li>No contact forms or customer data capture in the calculator flow.</li>
         </ul>
       </section>
 

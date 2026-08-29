@@ -33,6 +33,7 @@ Create these collections in PocketBase Admin UI:
    - `hero` (text, required)
    - `body` (text, required)
    - `faq` (json, array)
+
 ## Seed Guidance
 - Add 5-10 providers manually in `providers`.
 - Add one active `calculator_assumptions` record.
