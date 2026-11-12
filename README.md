@@ -20,13 +20,51 @@ Next.js + PocketBase MVP for Australian novated lease estimate and provider comp
 
 ## Core Routes
 
-- `/novated-lease-calculator`
+- `/` home
+- `/how-novated-leasing-works`
+- `/novated-lease-calculator` (4 steps: car, details, estimate, editable assumptions), ending at the
+  comparison with the same answers. The step is in the URL (`?step=results`); the answers are shared
+  both ways in `sessionStorage` (`lib/journey.ts`), never the URL
 - `/novated-lease-comparison`
 - `/providers/[slug]`
+- `POST /api/leads` (quote requests: stored in PocketBase `leads`, then sent to the provider's webhook if set)
 - `/best-novated-lease-provider-australia`
 - `/novated-lease-without-phone-number`
 - `/novated-lease-brisbane`
 - `/ev-novated-lease-comparison`
+
+## Design System
+
+Tokens and component classes live in `app/globals.css`, ported from the
+"Novated Lease Calculator" Claude Design project (teal + orange on white, Geist).
+Shared React primitives are in `components/ui`. Rules the UI holds to:
+no sign-up, contact details collected only when someone asks a provider for a quote (with
+explicit consent naming that provider), an estimate disclaimer on every page, and
+every calculator figure visible and editable.
+
+## Analytics (Umami)
+
+Traffic numbers for provider pitches come from a self-hosted [Umami](https://umami.is/docs) instance.
+Analytics stays off until `UMAMI_SCRIPT_URL` and `UMAMI_WEBSITE_ID` are set.
+
+1. Run Umami with Postgres, e.g. its Docker Compose setup, on the same box as PocketBase. Put it on its
+   own subdomain behind HTTPS and change the default admin password.
+2. Add a website in Umami for the production domain and copy its website ID.
+3. Set `UMAMI_SCRIPT_URL` (`https://<umami-host>/script.js`), `UMAMI_WEBSITE_ID`, and `UMAMI_DOMAINS`
+   (production hostname, so local and preview visits don't count).
+
+Page views are automatic. Custom events, in funnel order:
+
+| Event | When | Data |
+| --- | --- | --- |
+| `calculator_completed` | Calculator reaches the results step | `vehicleType` |
+| `calculator_to_comparison` | "Compare providers" pressed on the results step | `vehicleType` |
+| `quote_open` | "Get a quote" pressed on a provider card | `providerSlug` |
+| `lead_submit` | Quote request saved | `providerSlug`, `state` |
+| `affiliate_outbound_click` | A provider's affiliate link clicked | `providerSlug` |
+
+Ad blockers hide some visitors from Umami, so the counts are a lower bound. For lead numbers, count the
+PocketBase `leads` collection rather than `lead_submit`.
 
 ## PocketBase
 
