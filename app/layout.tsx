@@ -1,29 +1,43 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { JOURNEY_PENDING_SCRIPT } from "@/lib/journey";
 import "./globals.css";
 
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
+const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
+
 export const metadata: Metadata = {
-  title: "NovatedCalc - Compare Novated Lease Providers",
+  title: "NovatedCalc - Novated Lease Calculator and Provider Comparison",
   description:
-    "Estimate novated lease take-home impact, compare providers in Australia, and request matched quotes.",
+    "Work out what a novated lease would cost you and compare Australian providers on fees and service. Free, no sign-up.",
 };
+
+/** Umami analytics, only loaded when both are set. See README › Analytics. */
+const umamiScriptUrl = process.env.UMAMI_SCRIPT_URL;
+const umamiWebsiteId = process.env.UMAMI_WEBSITE_ID;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    // The journey script may set data-journey-pending on <html> before React hydrates.
+    <html lang="en-AU" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: JOURNEY_PENDING_SCRIPT }} />
+      </head>
       <body>
-        <main className="container">
-          <header className="glass-card">
-            <strong>NovatedCalc</strong>
-            <nav className="grid-two" style={{ marginTop: "0.75rem" }}>
-              <Link href="/">Home</Link>
-              <Link href="/novated-lease-calculator">Calculator</Link>
-              <Link href="/novated-lease-comparison">Comparison</Link>
-              <Link href="/providers/alpha-fleet-australia">Providers</Link>
-            </nav>
-          </header>
-          {children}
-        </main>
+        <SiteHeader />
+        <main>{children}</main>
+        <SiteFooter />
+        {umamiScriptUrl && umamiWebsiteId ? (
+          <Script
+            src={umamiScriptUrl}
+            data-website-id={umamiWebsiteId}
+            data-domains={process.env.UMAMI_DOMAINS || undefined}
+            strategy="afterInteractive"
+          />
+        ) : null}
       </body>
     </html>
   );

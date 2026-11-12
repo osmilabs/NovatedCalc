@@ -1,25 +1,22 @@
 import type { Metadata } from "next";
-import { ProviderComparisonTable } from "@/components/comparison/ProviderComparisonTable";
+import { ProviderComparison } from "@/components/comparison/ProviderComparison";
+import { EstimateChip } from "@/components/ui/EstimateChip";
+import { getAssumptions } from "@/lib/assumptions";
 import { getProviders } from "@/lib/providers";
 
 export const metadata: Metadata = {
   title: "Novated Lease Comparison Australia",
   description:
-    "Compare Australian novated lease providers on fees, inclusions, service model, and responsiveness.",
+    "Compare Australian novated lease providers on what they'd cost you each month, their fees, rates and inclusions.",
 };
 
 export default async function ComparisonPage() {
-  const providers = await getProviders();
+  const [providers, assumptions] = await Promise.all([getProviders(), getAssumptions()]);
 
   return (
     <>
-      <section className="glass-card hero">
-        <h1>Novated lease comparison</h1>
-        <p className="muted">
-          Rates are usually quote-only. Compare known factors that materially impact your experience.
-        </p>
-      </section>
-      <ProviderComparisonTable providers={providers} />
+      <EstimateChip />
+      <ProviderComparison providers={providers} assumptions={assumptions} />
     </>
   );
 }

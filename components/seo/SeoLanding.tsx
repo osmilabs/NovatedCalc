@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EstimateChip } from "@/components/ui/EstimateChip";
 import type { SeoPage } from "@/lib/types";
 
 type Props = {
@@ -18,24 +19,41 @@ export function SeoLanding({ page }: Props) {
 
   return (
     <>
-      <section className="glass-card hero">
-        <h1>{page.hero}</h1>
-        <p className="muted">{page.description}</p>
-        <p>{page.body}</p>
-      </section>
-      <section className="glass-card">
-        <h2>Common questions</h2>
-        {page.faq.map((item) => (
-          <article key={item.question}>
-            <h3>{item.question}</h3>
-            <p>{item.answer}</p>
-          </article>
-        ))}
-        <p>
-          <Link href="/novated-lease-calculator">Run calculator</Link> |{" "}
-          <Link href="/novated-lease-comparison">Compare providers</Link>
-        </p>
-      </section>
+      <EstimateChip />
+
+      <div className="page page-narrow">
+        <section className="section-hero intro">
+          <h1 className="headline headline-md">{page.hero}</h1>
+          <p className="lede">{page.description}</p>
+          <p className="text-body">{page.body}</p>
+        </section>
+
+        {page.faq.length > 0 ? (
+          <section className="section">
+            <h2 className="eyebrow section-title">Common questions</h2>
+            <div className="panel">
+              {page.faq.map((item) => (
+                <div className="term" key={item.question}>
+                  <h3 className="term-word">{item.question}</h3>
+                  <p className="term-def">{item.answer}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        <section className="section">
+          <div className="panel-flush button-row">
+            <Link className="btn btn-primary" href="/novated-lease-calculator">
+              Work out my numbers <span className="arrow" aria-hidden>→</span>
+            </Link>
+            <Link className="btn btn-ghost" href="/novated-lease-comparison">
+              Compare providers
+            </Link>
+          </div>
+        </section>
+      </div>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

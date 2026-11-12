@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { CalculatorForm } from "@/components/calculator/CalculatorForm";
-import { defaultAssumptions } from "@/lib/mock-data";
-import { getPocketBaseClient } from "@/lib/pocketbase";
+import { CalculatorFlow } from "@/components/calculator/CalculatorFlow";
+import { getAssumptions } from "@/lib/assumptions";
 
 export const metadata: Metadata = {
   title: "Novated Lease Calculator Australia",
@@ -9,43 +8,10 @@ export const metadata: Metadata = {
     "Compare novated lease and car loan outcomes with clear assumptions and minimal inputs.",
 };
 
-async function getAssumptions() {
-  const client = getPocketBaseClient();
-  if (!client) return defaultAssumptions;
-
-  try {
-    const record = await client.collection("calculator_assumptions").getFirstListItem("active = true");
-    return {
-      gstRate: record.gstRate ?? defaultAssumptions.gstRate,
-      novatedLeaseInterestRateAnnual:
-        record.novatedLeaseInterestRateAnnual ?? defaultAssumptions.novatedLeaseInterestRateAnnual,
-      carLoanInterestRateAnnual: record.carLoanInterestRateAnnual ?? defaultAssumptions.carLoanInterestRateAnnual,
-      adminFeeMonthly: record.adminFeeMonthly ?? defaultAssumptions.adminFeeMonthly,
-      insuranceMonthly: record.insuranceMonthly ?? defaultAssumptions.insuranceMonthly,
-      maintenanceMonthly: record.maintenanceMonthly ?? defaultAssumptions.maintenanceMonthly,
-      evFbtExemptionBenefitRate:
-        record.evFbtExemptionBenefitRate ??
-        record.evFbtDiscount ??
-        defaultAssumptions.evFbtExemptionBenefitRate,
-      fuelAndRunningRatePerKm: record.fuelAndRunningRatePerKm ?? defaultAssumptions.fuelAndRunningRatePerKm,
-      registrationMonthly: record.registrationMonthly ?? defaultAssumptions.registrationMonthly,
-    };
-  } catch {
-    return defaultAssumptions;
-  }
-}
+// Rendered per request so the calculator can read ?step= on the server and render the right step.
+export const dynamic = "force-dynamic";
 
 export default async function CalculatorPage() {
   const assumptions = await getAssumptions();
-  return (
-    <>
-      <section className="glass-card hero">
-        <h1>Novated lease calculator</h1>
-        <p className="muted">
-          Compare a novated lease with a standard car loan using conservative assumptions and minimal inputs.
-        </p>
-      </section>
-      <CalculatorForm assumptions={assumptions} />
-    </>
-  );
+  return <CalculatorFlow defaultAssumptions={assumptions} />;
 }
