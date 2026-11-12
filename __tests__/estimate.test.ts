@@ -22,6 +22,29 @@ describe("estimateNovatedLease", () => {
     expect(result.residualDueAtEnd).toBeGreaterThan(0);
   });
 
+  it("breaks the package into parts that add up", () => {
+    const result = estimateNovatedLease(
+      {
+        salary: 120000,
+        carPrice: 65000,
+        leaseTermMonths: 48,
+        kilometresPerYear: 15000,
+        vehicleType: "ev",
+      },
+      defaultAssumptions,
+    );
+
+    expect(
+      result.novatedLeaseMonthlyFinanceCost + result.runningMonthlyCost + defaultAssumptions.adminFeeMonthly,
+    ).toBeCloseTo(result.novatedLeaseMonthlyPackageCost, 1);
+    expect(result.novatedLeaseMonthlyPackageCost - result.taxSavingMonthly).toBeCloseTo(
+      result.novatedLeaseMonthlyTakeHomeImpact,
+      1,
+    );
+    expect(result.cashMonthlyCost).toBeLessThan(result.carLoanMonthlyCost);
+    expect(result.financedAmount + result.residualDueAtEnd).toBeCloseTo(65000, 1);
+  });
+
   it("can show car loan ahead when novated assumptions are unfavorable", () => {
     const result = estimateNovatedLease(
       {

@@ -1,5 +1,7 @@
 import type { CalculatorAssumptions, Provider, SeoPage } from "@/lib/types";
 
+export const ASSUMPTIONS_REVIEWED = "September 2026";
+
 export const defaultAssumptions: CalculatorAssumptions = {
   gstRate: 0.1,
   novatedLeaseInterestRateAnnual: 0.085,
@@ -17,6 +19,10 @@ export const fallbackProviders: Provider[] = [
     id: "prov-1",
     slug: "alpha-fleet-australia",
     name: "Alpha Fleet Australia",
+    product: "Alpha Complete",
+    interestRate: 0.0775,
+    highlights: ["Fuel, servicing, tyres and rego bundled", "Self-service portal for claims"],
+    offer: "Admin fee waived for your first three months.",
     states: ["NSW", "QLD", "VIC", "WA"],
     serviceModel: "hybrid",
     setupFee: 395,
@@ -32,6 +38,9 @@ export const fallbackProviders: Provider[] = [
     id: "prov-2",
     slug: "nova-lease-group",
     name: "Nova Lease Group",
+    product: "Nova Flex Lease",
+    interestRate: 0.079,
+    highlights: ["A broker compares lenders for you", "Roadside assist included"],
     states: ["NSW", "VIC", "ACT", "SA"],
     serviceModel: "broker",
     setupFee: 295,
@@ -47,6 +56,10 @@ export const fallbackProviders: Provider[] = [
     id: "prov-3",
     slug: "greenwheel-novated",
     name: "GreenWheel Novated",
+    product: "GreenWheel EV Lease",
+    interestRate: 0.072,
+    highlights: ["Electric and plug-in hybrid cars only", "Help choosing and installing a charger"],
+    offer: "Free home charger install on eligible EVs.",
     states: ["QLD", "NSW", "VIC"],
     serviceModel: "direct",
     setupFee: 349,
@@ -62,6 +75,9 @@ export const fallbackProviders: Provider[] = [
     id: "prov-4",
     slug: "summit-salary-packaging",
     name: "Summit Salary Packaging",
+    product: "Summit Full Package",
+    interestRate: 0.0815,
+    highlights: ["Insurance support included", "Covers five states"],
     states: ["QLD", "NSW", "VIC", "TAS", "SA"],
     serviceModel: "hybrid",
     setupFee: 410,
@@ -77,6 +93,10 @@ export const fallbackProviders: Provider[] = [
     id: "prov-5",
     slug: "metro-drive-benefits",
     name: "Metro Drive Benefits",
+    product: "Metro Drive Essentials",
+    interestRate: 0.0745,
+    highlights: ["Deal directly with the lender", "Tyres and roadside assist included"],
+    offer: "Roadside assistance for 12 months.",
     states: ["NSW", "QLD", "VIC", "WA", "NT"],
     serviceModel: "direct",
     setupFee: 330,
@@ -92,6 +112,9 @@ export const fallbackProviders: Provider[] = [
     id: "prov-6",
     slug: "brisbane-novated-specialists",
     name: "Brisbane Novated Specialists",
+    product: "Brisbane Local Lease",
+    interestRate: 0.0835,
+    highlights: ["Queensland only", "Local support team"],
     states: ["QLD"],
     serviceModel: "broker",
     setupFee: 270,
@@ -124,15 +147,26 @@ export const fallbackSeoPages: SeoPage[] = [
   {
     slug: "novated-lease-without-phone-number",
     keyword: "novated lease without phone number",
-    title: "Novated Lease Without Phone Number - Research First",
+    title: "Compare Novated Leases Without Giving Your Phone Number",
     description:
-      "See estimate results and provider comparisons without submitting personal contact details.",
-    hero: "Research Novated Lease Options Without Calls First",
-    body: "Use the calculator and comparison tables to evaluate options privately before any external quote process.",
+      "See estimated costs from every provider without handing over your contact details. Only share them with the one you pick, if you want to.",
+    hero: "Compare every provider before anyone calls you",
+    body: "Use the calculator and comparison to see what each provider would likely cost you, with no sign-up and no contact details. When one looks right, you can choose to send your details to that provider alone for a formal quote. Nobody else gets them.",
     faq: [
       {
-        question: "Do I need to provide a phone number?",
-        answer: "No. This app does not collect phone numbers or contact details in its core flow.",
+        question: "Do I need to give a phone number to see the comparison?",
+        answer:
+          "No. Every estimate and comparison is free to see without any contact details.",
+      },
+      {
+        question: "When would I give my details?",
+        answer:
+          "Only if you ask a provider for a formal quote. Your details, including a phone number so they can reach you, go to that one provider and no others.",
+      },
+      {
+        question: "Is the estimate the price I'll pay?",
+        answer:
+          "No. It's an estimate from each provider's published fees and rates. The provider sets the final figures after checking your employer, the car and your circumstances.",
       },
     ],
   },

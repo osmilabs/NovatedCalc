@@ -12,14 +12,16 @@ function monthlyPayment(principal: number, annualRate: number, months: number) {
   return principal * ((monthlyRate * factor) / (factor - 1));
 }
 
-function getResidualRate(termMonths: number) {
+export const LEASE_TERM_OPTIONS = [24, 36, 48, 60];
+
+export function getResidualRate(termMonths: number) {
   if (termMonths >= 60) return 0.2;
   if (termMonths >= 48) return 0.28;
   if (termMonths >= 36) return 0.37;
   return 0.46;
 }
 
-function getMarginalTaxRate(salary: number) {
+export function getMarginalTaxRate(salary: number) {
   if (salary >= 180000) return 0.45;
   if (salary >= 120000) return 0.37;
   if (salary >= 45000) return 0.325;
@@ -57,6 +59,8 @@ export function estimateNovatedLease(
 
   const carLoanMonthlyFinanceCost = monthlyPayment(financedAmount, assumptions.carLoanInterestRateAnnual, termMonths);
   const carLoanMonthlyCost = carLoanMonthlyFinanceCost + runningMonthly;
+  // Paying cash for the same financed portion, spread over the term with no interest.
+  const cashMonthlyCost = financedAmount / termMonths + runningMonthly;
 
   const monthlyDifference = carLoanMonthlyCost - novatedLeaseMonthlyTakeHomeImpact;
   const termDifference = monthlyDifference * termMonths;
@@ -72,6 +76,12 @@ export function estimateNovatedLease(
     novatedLeaseMonthlyPackageCost: round(nlMonthlyPackageCost),
     novatedLeaseMonthlyFinanceCost: round(nlMonthlyFinanceCost),
     carLoanMonthlyFinanceCost: round(carLoanMonthlyFinanceCost),
+    runningMonthlyCost: round(runningMonthly),
+    taxSavingMonthly: round(nlPreTaxSaving + nlGstSaving + nlEvBenefit),
+    cashMonthlyCost: round(cashMonthlyCost),
+    financedAmount: round(financedAmount),
+    marginalTaxRate,
+    residualRate,
     comparisonLabel,
   };
 }
