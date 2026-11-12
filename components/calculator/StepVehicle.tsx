@@ -110,21 +110,25 @@ export function StepVehicle({ vehicleId, input, onSelectVehicle, update, onNext 
           }}
           marks={["$20k", "$85k", "$150k"]}
         />
-        {vehicleId === null ? (
-          <div className="chip-row mt" role="group" aria-label="Vehicle type">
-            {CUSTOM_TYPES.map((option) => (
-              <button
-                key={option.key}
-                type="button"
-                className={"chip" + (input.vehicleType === option.key ? " is-active" : "")}
-                aria-pressed={input.vehicleType === option.key}
-                onClick={() => update({ vehicleType: option.key })}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        ) : null}
+        {/* Always shown, so it's clear the type changes the result. Switching a preset's type makes it a custom car. */}
+        <div className="chip-row mt" role="group" aria-label="Vehicle type">
+          {CUSTOM_TYPES.map((option) => (
+            <button
+              key={option.key}
+              type="button"
+              className={"chip" + (input.vehicleType === option.key ? " is-active" : "")}
+              aria-pressed={input.vehicleType === option.key}
+              onClick={() => {
+                if (input.vehicleType === option.key) return;
+                onSelectVehicle(null);
+                update({ vehicleType: option.key });
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <p className="text-sm mt-sm">Electric cars are exempt from fringe benefits tax, so they usually save more.</p>
       </div>
 
       <div className="bottom-bar">

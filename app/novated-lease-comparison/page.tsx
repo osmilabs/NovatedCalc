@@ -1,22 +1,16 @@
 import type { Metadata } from "next";
-import { ProviderComparison } from "@/components/comparison/ProviderComparison";
-import { EstimateChip } from "@/components/ui/EstimateChip";
-import { getAssumptions } from "@/lib/assumptions";
-import { getProviders } from "@/lib/providers";
+import { SeoLanding } from "@/components/seo/SeoLanding";
+import { resolveSeoPage } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Novated Lease Comparison Australia",
-  description:
-    "Compare Australian novated lease providers on what they'd cost you each month, their fees, rates and inclusions.",
-};
+/** The indexable landing page. Results live at ./results and are only reachable through the calculator. */
+const slug = "novated-lease-comparison";
 
-export default async function ComparisonPage() {
-  const [providers, assumptions] = await Promise.all([getProviders(), getAssumptions()]);
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await resolveSeoPage(slug);
+  return { title: page.title, description: page.description, alternates: { canonical: `/${slug}` } };
+}
 
-  return (
-    <>
-      <EstimateChip />
-      <ProviderComparison providers={providers} assumptions={assumptions} />
-    </>
-  );
+export default async function NovatedLeaseComparisonPage() {
+  const page = await resolveSeoPage(slug);
+  return <SeoLanding page={page} />;
 }

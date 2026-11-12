@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AffiliateLink } from "@/components/providers/AffiliateLink";
-import { EstimateChip } from "@/components/ui/EstimateChip";
+import { BackToProviders } from "@/components/providers/BackToProviders";
+import { PreviewNotice, SampleTag } from "@/components/ui/PreviewNotice";
 import { COMPARISON_LEASE_MONTHS, feesOverLease } from "@/lib/fees";
 import { money } from "@/lib/format";
 import { getProviderBySlug, getProviders } from "@/lib/providers";
@@ -24,6 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${provider.name} Novated Lease Profile`,
     description: provider.summary,
+    // Made-up providers shouldn't turn up in search results.
+    ...(provider.sample ? { robots: { index: false } } : {}),
   };
 }
 
@@ -36,18 +39,18 @@ export default async function ProviderPage({ params }: Props) {
 
   return (
     <>
-      <EstimateChip>Provider details checked by hand · rates are quote-only</EstimateChip>
-
       <div className="page page-narrow">
         <section className="section-hero intro">
-          <Link className="back-link" href="/novated-lease-comparison">
-            ← All providers
-          </Link>
+          <BackToProviders />
           <p className="eyebrow">
             Provider profile <span className="tag capitalize">{provider.serviceModel}</span>
           </p>
-          <h1 className="headline headline-md">{provider.name}</h1>
+          <h1 className="headline headline-md">
+            {provider.name}
+            {provider.sample ? <SampleTag /> : null}
+          </h1>
           <p className="lede">{provider.summary}</p>
+          {provider.sample ? <PreviewNotice subject="provider details" className="mt" /> : null}
         </section>
 
         <section className="section">
@@ -109,7 +112,7 @@ export default async function ProviderPage({ params }: Props) {
             <Link className="btn btn-primary" href="/novated-lease-calculator">
               Work out my numbers <span className="arrow" aria-hidden>→</span>
             </Link>
-            {provider.affiliateLink ? (
+            {provider.affiliateLink && !provider.sample ? (
               <>
                 <AffiliateLink className="btn btn-ghost" href={provider.affiliateLink} providerSlug={provider.slug}>
                   Visit {provider.name} <span aria-hidden>↗</span>

@@ -14,18 +14,24 @@ function monthlyPayment(principal: number, annualRate: number, months: number) {
 
 export const LEASE_TERM_OPTIONS = [24, 36, 48, 60];
 
+/** ATO minimum residual values for car leases (TD 93/142), by whole years of lease term. */
+const MINIMUM_RESIDUALS: Record<number, number> = { 1: 0.6563, 2: 0.5625, 3: 0.4688, 4: 0.375, 5: 0.2813 };
+
 export function getResidualRate(termMonths: number) {
-  if (termMonths >= 60) return 0.2;
-  if (termMonths >= 48) return 0.28;
-  if (termMonths >= 36) return 0.37;
-  return 0.46;
+  const years = Math.min(5, Math.max(1, Math.floor(termMonths / 12)));
+  return MINIMUM_RESIDUALS[years];
 }
 
+/** Medicare levy, which salary packaging also saves. Ignores the low-income phase-in. */
+const MEDICARE_LEVY = 0.02;
+
+/** 2026-27 resident marginal income tax rate plus the Medicare levy. */
 export function getMarginalTaxRate(salary: number) {
-  if (salary >= 180000) return 0.45;
-  if (salary >= 120000) return 0.37;
-  if (salary >= 45000) return 0.325;
-  return 0.19;
+  if (salary > 190000) return 0.45 + MEDICARE_LEVY;
+  if (salary > 135000) return 0.37 + MEDICARE_LEVY;
+  if (salary > 45000) return 0.3 + MEDICARE_LEVY;
+  if (salary > 18200) return 0.15 + MEDICARE_LEVY;
+  return 0;
 }
 
 export function estimateNovatedLease(

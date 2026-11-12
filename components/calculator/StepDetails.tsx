@@ -57,7 +57,7 @@ export function StepDetails({ input, update, onBack, onNext }: Props) {
           </div>
           <p className="text-sm mt-sm">
             Balloon payment at the end:{" "}
-            <b className="strong-ink">{percent(getResidualRate(input.leaseTermMonths))}</b> of the car&apos;s price
+            <b className="strong-ink">{percent(getResidualRate(input.leaseTermMonths), 1)}</b> of the car&apos;s price
           </p>
         </div>
 

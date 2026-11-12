@@ -61,6 +61,8 @@ export type Provider = {
   affiliateLink?: string;
   summary: string;
   active: boolean;
+  /** A made-up provider used while the comparison is a preview. Never accepts quotes. */
+  sample?: boolean;
 };
 
 export type SeoPage = {

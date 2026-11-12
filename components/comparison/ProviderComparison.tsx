@@ -1,12 +1,15 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { MyDetails } from "@/components/comparison/MyDetails";
 import { type Frequency, ProviderCard } from "@/components/comparison/ProviderCard";
 import { QuoteRequest } from "@/components/comparison/QuoteRequest";
 import { RefineOptions, type SortKey } from "@/components/comparison/RefineOptions";
+import { PreviewNotice } from "@/components/ui/PreviewNotice";
 import { useJourney } from "@/components/ui/useJourney";
 import { feesOverLease, providerMonthlyCost } from "@/lib/fees";
+import { loadJourney } from "@/lib/journey";
 import { trackClientEvent } from "@/lib/tracking";
 import type { CalculatorAssumptions, Provider } from "@/lib/types";
 import { VEHICLES } from "@/lib/vehicles";
@@ -24,6 +27,13 @@ export function ProviderComparison({ providers, assumptions: defaultAssumptions 
   const [showDetails, setShowDetails] = useState(false);
   const [quoteSlug, setQuoteSlug] = useState<string | null>(null);
   const sheetRef = useRef<HTMLDialogElement>(null);
+  const router = useRouter();
+  // Results only make sense for someone's own answers, so without a saved journey start at the calculator.
+  const [hasJourney, setHasJourney] = useState(false);
+  useLayoutEffect(() => {
+    if (loadJourney()) setHasJourney(true);
+    else router.replace("/novated-lease-calculator");
+  }, [router]);
 
   const toggleFrequency = () => setFrequency((f) => (f === "month" ? "fortnight" : "month"));
   const vehicle = VEHICLES.find((v) => v.id === vehicleId);
@@ -46,6 +56,7 @@ export function ProviderComparison({ providers, assumptions: defaultAssumptions 
     return priced.sort((a, b) => key(a) - key(b));
   }, [providers, input, assumptions, stateFilter, sortBy]);
 
+  const preview = providers.some((provider) => provider.sample);
   const cheapest = Math.min(...rows.map((row) => row.monthlyCost));
   const quoteRow = rows.find((row) => row.provider.slug === quoteSlug);
 
@@ -63,6 +74,8 @@ export function ProviderComparison({ providers, assumptions: defaultAssumptions 
     <MyDetails input={input} vehicleId={vehicleId} update={update} onSelectVehicle={selectVehicle} />
   );
 
+  if (!hasJourney) return null;
+
   return (
     <div className="cmp journey-gate">
       <div className="cmp-layout">
@@ -71,7 +84,7 @@ export function ProviderComparison({ providers, assumptions: defaultAssumptions 
             <h1 className="cmp-title">
               We found{" "}
               <b>
-                {rows.length} provider{rows.length === 1 ? "" : "s"}
+                {rows.length} {preview ? "example " : ""}provider{rows.length === 1 ? "" : "s"}
               </b>{" "}
               for your {vehicleName}
             </h1>
@@ -80,6 +93,7 @@ export function ProviderComparison({ providers, assumptions: defaultAssumptions 
               The provider sets the final figures. Some employers only work with certain providers, so check with your
               payroll or HR team.
             </p>
+            {preview ? <PreviewNotice className="mt" /> : null}
           </header>
 
           <div className="cmp-actions">

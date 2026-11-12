@@ -24,6 +24,8 @@ Create these collections in PocketBase Admin UI:
    - `outboundEmail` (email, optional)
    - `summary` (text)
    - `active` (bool, default true)
+   - `sample` (bool, optional; marks a made-up provider. It's labelled as a sample on the site, its profile is
+     `noindex`, and quote requests to it are refused)
 2. `calculator_assumptions`
    - `gstRate` (number)
    - `adminFeeMonthly` (number)
@@ -56,7 +58,7 @@ Create these collections in PocketBase Admin UI:
    - `title` (text, required)
    - `description` (text, required)
    - `hero` (text, required)
-   - `body` (text, required)
+   - `body` (text, required; separate paragraphs with a blank line)
    - `faq` (json, array)
 
 ## Seed Guidance

@@ -179,6 +179,9 @@ function QuoteForm({ provider, input, vehicleName, monthlyCost, defaultState, on
         <span>{consentText(provider.name)}</span>
       </label>
       <p className="text-sm">
+        See our <Link href="/privacy">privacy policy</Link> for how we handle your details.
+      </p>
+      <p className="text-sm">
         We may be paid a referral fee by {provider.name} if you go ahead. It never changes the order of results.
       </p>
 
@@ -206,6 +209,28 @@ function QuoteForm({ provider, input, vehicleName, monthlyCost, defaultState, on
   );
 }
 
+/** Shown instead of the form for an example provider: there's nobody to send details to. */
+function SampleQuote({ provider, onDone }: { provider: Provider; onDone: () => void }) {
+  return (
+    <div className="quote-done" role="status">
+      <h2 id="quote-title" className="cmp-sheet-title">
+        Quote requests coming soon
+      </h2>
+      <p className="text-body">
+        {provider.name} is an illustrative listing, so quote requests aren&apos;t available for it. No personal details
+        have been collected.
+      </p>
+      <p className="text-body mt-sm">
+        We&apos;re onboarding provider partners now. Once they&apos;re listed, you&apos;ll be able to request a quote
+        directly from this page.
+      </p>
+      <button type="button" className="btn btn-primary btn-block mt" onClick={onDone}>
+        Back to results
+      </button>
+    </div>
+  );
+}
+
 export function QuoteRequest({ provider, onClose, ...rest }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
 
@@ -227,7 +252,11 @@ export function QuoteRequest({ provider, onClose, ...rest }: Props) {
       <button type="button" className="quote-x" aria-label="Close" onClick={() => ref.current?.close()}>
         ×
       </button>
-      {provider ? <QuoteForm key={provider.id} provider={provider} {...rest} onDone={() => ref.current?.close()} /> : null}
+      {provider?.sample ? (
+        <SampleQuote provider={provider} onDone={() => ref.current?.close()} />
+      ) : provider ? (
+        <QuoteForm key={provider.id} provider={provider} {...rest} onDone={() => ref.current?.close()} />
+      ) : null}
     </dialog>
   );
 }

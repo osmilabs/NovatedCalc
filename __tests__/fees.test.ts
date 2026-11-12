@@ -34,8 +34,8 @@ describe("providerMonthlyCost", () => {
   it("spreads the setup fee over the lease after tax", () => {
     const withSetup = { ...base, setupFee: 480 };
     const extra = providerMonthlyCost(withSetup, input, defaultAssumptions) - providerMonthlyCost(base, input, defaultAssumptions);
-    // $480 over 48 months is $10 a month, less the 37% marginal rate.
-    expect(extra).toBeCloseTo(10 * (1 - 0.37), 2);
+    // $480 over 48 months is $10 a month, less the 32% marginal rate (30% plus Medicare).
+    expect(extra).toBeCloseTo(10 * (1 - 0.32), 2);
   });
 
   it("uses the default rate for quote-only providers", () => {

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SampleTag } from "@/components/ui/PreviewNotice";
 import { percent } from "@/lib/format";
 import type { Provider } from "@/lib/types";
 
@@ -54,7 +55,10 @@ export function ProviderCard({
 
       <div className="cmp-names">
         {isCheapest ? <span className="cmp-rank">Lowest cost to you</span> : null}
-        <p className="cmp-prov">{provider.name}</p>
+        <p className="cmp-prov">
+          {provider.name}
+          {provider.sample ? <SampleTag /> : null}
+        </p>
         <h3 className="cmp-prod">{provider.product || provider.name}</h3>
       </div>
 

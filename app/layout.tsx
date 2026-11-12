@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import { AdRails, FooterAd, MobileAdBanner } from "@/components/ads/SiteAds";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteHeader } from "@/components/site/SiteHeader";
+import { ADSENSE_CLIENT } from "@/lib/ads";
 import { JOURNEY_PENDING_SCRIPT } from "@/lib/journey";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "NovatedCalc - Novated Lease Calculator and Provider Comparison",
   description:
     "Work out what a novated lease would cost you and compare Australian providers on fees and service. Free, no sign-up.",
@@ -29,7 +33,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SiteHeader />
         <main>{children}</main>
+        <FooterAd />
         <SiteFooter />
+        <AdRails />
+        <MobileAdBanner />
+        {ADSENSE_CLIENT ? (
+          <Script
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        ) : null}
         {umamiScriptUrl && umamiWebsiteId ? (
           <Script
             src={umamiScriptUrl}

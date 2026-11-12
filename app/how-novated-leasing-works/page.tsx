@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { EstimateChip } from "@/components/ui/EstimateChip";
+import { guideHref } from "@/components/guides/GuideArticle";
+import { GUIDES } from "@/lib/guides";
 
 export const metadata: Metadata = {
   title: "How Novated Leasing Works - A Plain-Language Guide",
   description:
     "What a novated lease is, who it suits, what's bundled into the payment, and the catches to watch for.",
+  alternates: { canonical: "/how-novated-leasing-works" },
 };
 
 const STEPS = [
@@ -29,7 +31,7 @@ const STEPS = [
 
 const BUNDLED = ["Lease payments", "Fuel or charging", "Insurance", "Servicing", "Tyres", "Registration"];
 
-const SUITS = ["Earn above about $60,000", "Have a stable, salaried job", "Drive a decent distance", "Want an electric car"];
+const SUITS = ["Earn above $45,000 (the 30% tax bracket)", "Have a stable, salaried job", "Drive a decent distance", "Want an electric car"];
 const THINK_TWICE = ["Change jobs often", "Are on a lower income", "Barely drive", "Already own a car outright"];
 
 const CATCHES = [
@@ -45,6 +47,53 @@ const CATCHES = [
   {
     term: "Your employer has to offer it",
     definition: "Most large employers and many government departments do. Smaller businesses often don't.",
+  },
+];
+
+/** 2026-27 marginal rates including the 2% Medicare levy. */
+const PRE_TAX_VALUE = [
+  { income: "$45,001 – $135,000", rate: "32%", cost: "$680" },
+  { income: "$135,001 – $190,000", rate: "39%", cost: "$610" },
+  { income: "Over $190,000", rate: "47%", cost: "$530" },
+];
+
+const NEEDS = [
+  {
+    term: "An employer that offers it",
+    definition:
+      "Ask payroll or HR whether they offer salary packaging for cars, and whether you have to use particular providers.",
+  },
+  {
+    term: "A car within the provider's rules",
+    definition:
+      "New or used. Providers usually set an age limit for used cars, and the electric car exemption has a price limit.",
+  },
+  {
+    term: "Finance approval",
+    definition: "The finance company runs a credit check, much like a car loan.",
+  },
+];
+
+const FAQ = [
+  {
+    question: "Who owns the car during a novated lease?",
+    answer:
+      "The finance company owns it until the lease ends. You drive it as your own, with no employer branding or restrictions.",
+  },
+  {
+    question: "What happens if I leave my job?",
+    answer:
+      "The lease comes back to you. You can move it to a new employer that offers salary packaging, keep paying it yourself after tax, or pay it out.",
+  },
+  {
+    question: "Can I get a novated lease on a used car?",
+    answer:
+      "Usually, yes. Providers often set an age limit, and a used electric car only gets the FBT exemption if it was first sold after 1 July 2022 under the price limit.",
+  },
+  {
+    question: "Do I have to pay a balloon payment?",
+    answer:
+      "Yes, at the end of the lease. On a 4-year lease the minimum is 37.5% of the amount financed. You can pay it, sell or trade in the car, or re-lease it.",
   },
 ];
 
@@ -73,7 +122,6 @@ function TermList({ items }: { items: Array<{ term: string; definition: string }
 export default function HowNovatedLeasingWorksPage() {
   return (
     <>
-      <EstimateChip />
 
       <div className="page page-narrow">
         <section className="section-hero intro">
@@ -111,6 +159,26 @@ export default function HowNovatedLeasingWorksPage() {
               you would have paid on that slice.
             </p>
           </div>
+        </section>
+
+        <section className="section">
+          <h2 className="eyebrow section-title">What paying before tax is worth</h2>
+          <div className="panel">
+            <p className="text-body">What $1,000 of car costs takes from your take-home pay in 2026–27:</p>
+            {PRE_TAX_VALUE.map((row) => (
+              <div className="list-row" key={row.income}>
+                <div>
+                  <p className="list-row-label">{row.income}</p>
+                  <p className="list-row-sub">{row.rate} tax rate, including Medicare</p>
+                </div>
+                <span className="list-row-value">{row.cost}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-sm mt-sm">
+            Your employer also claims back GST on the car and running costs.{" "}
+            <Link href={guideHref("is-a-novated-lease-worth-it")}>Is a novated lease worth it?</Link>
+          </p>
         </section>
 
         <section className="section">
@@ -182,6 +250,11 @@ export default function HowNovatedLeasingWorksPage() {
         </section>
 
         <section className="section">
+          <h2 className="eyebrow section-title">What you need</h2>
+          <TermList items={NEEDS} />
+        </section>
+
+        <section className="section">
           <h2 className="eyebrow section-title">Things to watch</h2>
           <TermList items={CATCHES} />
         </section>
@@ -189,6 +262,27 @@ export default function HowNovatedLeasingWorksPage() {
         <section className="section">
           <h2 className="eyebrow section-title">Words you&apos;ll see</h2>
           <TermList items={JARGON} />
+        </section>
+
+        <section className="section">
+          <h2 className="eyebrow section-title">Common questions</h2>
+          <TermList items={FAQ.map((item) => ({ term: item.question, definition: item.answer }))} />
+        </section>
+
+        <section className="section">
+          <h2 className="eyebrow section-title">Go deeper</h2>
+          <div className="stack-sm">
+            {GUIDES.map((guide) => (
+              <Link className="tile" href={guideHref(guide.slug)} key={guide.slug}>
+                <span className="tile-body">
+                  <span className="tile-title">{guide.shortTitle}</span>
+                </span>
+                <span className="tile-go" aria-hidden>
+                  →
+                </span>
+              </Link>
+            ))}
+          </div>
         </section>
 
         <section className="section">
@@ -206,6 +300,21 @@ export default function HowNovatedLeasingWorksPage() {
           </div>
         </section>
       </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQ.map((item) => ({
+              "@type": "Question",
+              name: item.question,
+              acceptedAnswer: { "@type": "Answer", text: item.answer },
+            })),
+          }),
+        }}
+      />
     </>
   );
 }

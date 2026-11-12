@@ -11,6 +11,8 @@ export function SiteFooter() {
           <Link href="/novated-lease-comparison">Compare providers</Link>
           <Link href="/ev-novated-lease-comparison">EV novated leases</Link>
           <Link href="/novated-lease-without-phone-number">No phone number needed</Link>
+          <Link href="/guides">Guides</Link>
+          <Link href="/privacy">Privacy</Link>
         </nav>
         <p className="text-sm">
           Estimates only, not financial advice. We don&apos;t sell or arrange leases. We only collect your details if you

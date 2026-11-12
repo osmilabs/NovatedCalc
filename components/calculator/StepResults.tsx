@@ -68,7 +68,7 @@ export function StepResults({
     ["Provider admin fee a month", money(assumptions.adminFeeMonthly)],
     ["Lease interest rate", percent(assumptions.novatedLeaseInterestRateAnnual, 2)],
     ["Car loan interest rate", percent(assumptions.carLoanInterestRateAnnual, 2)],
-    ["Balloon payment", percent(result.residualRate)],
+    ["Balloon payment", percent(result.residualRate, 1)],
   ];
 
   return (
@@ -277,7 +277,7 @@ export function StepResults({
       </section>
 
       <div className="bottom-bar">
-        <Link href="/novated-lease-comparison" className="btn btn-primary btn-grow" onClick={onCompare}>
+        <Link href="/novated-lease-comparison/results" className="btn btn-primary btn-grow" onClick={onCompare}>
           Compare providers <span className="arrow" aria-hidden>→</span>
         </Link>
       </div>

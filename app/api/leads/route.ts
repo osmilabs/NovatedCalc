@@ -79,6 +79,8 @@ export async function POST(req: Request) {
   const [providers, assumptions] = await Promise.all([getProviders(), getAssumptions()]);
   const provider = providers.find((p) => p.slug === lead.providerSlug);
   if (!provider) return fail(404, "That provider isn't available any more.");
+  // Made-up preview providers have nobody to receive a lead, so never store details for them.
+  if (provider.sample) return fail(409, "Quote requests aren't available for example listings.");
 
   const unavailable = () => {
     trackServerEvent("lead_unstored", { providerSlug: provider.slug });

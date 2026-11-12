@@ -32,6 +32,7 @@ export async function getProviders(): Promise<Provider[]> {
       affiliateLink: record.affiliateLink ?? undefined,
       summary: record.summary ?? "",
       active: !!record.active,
+      sample: !!record.sample,
     }));
   } catch {
     return fallbackProviders;
@@ -67,4 +68,9 @@ export async function getSeoPages(): Promise<SeoPage[]> {
 export async function getSeoPageBySlug(slug: string): Promise<SeoPage | null> {
   const pages = await getSeoPages();
   return pages.find((page) => page.slug === slug) ?? null;
+}
+
+/** True while any listed provider is made up, so pages can say the comparison is a preview. */
+export function isPreview(providers: Provider[]): boolean {
+  return providers.some((provider) => provider.sample);
 }

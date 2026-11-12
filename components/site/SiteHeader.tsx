@@ -7,6 +7,7 @@ const NAV = [
   { href: "/how-novated-leasing-works", label: "How it works" },
   { href: "/novated-lease-calculator", label: "Calculator" },
   { href: "/novated-lease-comparison", label: "Compare providers" },
+  { href: "/guides", label: "Guides" },
 ] as const;
 
 export function SiteHeader() {

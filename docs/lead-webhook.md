@@ -42,7 +42,7 @@ Reply with any `2xx` status within 8 seconds. Anything else counts as failed, an
     "text": "Send my details and these figures to … so they can contact me about a quote. …",
     "version": "2026-11-06",
     "consentedAt": "2026-11-06T11:42:07.512Z",
-    "pageUrl": "https://…/novated-lease-comparison",
+    "pageUrl": "https://…/novated-lease-comparison/results",
     "exclusiveTo": "your-slug"
   }
 }

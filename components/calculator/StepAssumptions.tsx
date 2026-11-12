@@ -132,13 +132,13 @@ export function StepAssumptions({ assumptions, salary, onChange, onReset, onDone
               <p className="list-row-sub">For {LEASE_TERM_OPTIONS.map((term) => term / 12).join(", ")} year terms.</p>
             </div>
             <span className="list-row-value">
-              {LEASE_TERM_OPTIONS.map((term) => Math.round(getResidualRate(term) * 100)).join(" / ")}%
+              {LEASE_TERM_OPTIONS.map((term) => (getResidualRate(term) * 100).toFixed(1)).join(" / ")}%
             </span>
           </div>
           <div className="list-row">
             <div>
               <p className="list-row-label">Income tax rate</p>
-              <p className="list-row-sub">Your marginal rate on {money(salary)}.</p>
+              <p className="list-row-sub">Your marginal rate on {money(salary)}, including the 2% Medicare levy.</p>
             </div>
             <span className="list-row-value">{percent(getMarginalTaxRate(salary), 1)}</span>
           </div>

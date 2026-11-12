@@ -18,6 +18,9 @@ Next.js + PocketBase MVP for Australian novated lease estimate and provider comp
 3. Run app:
    - `pnpm dev`
 
+In production, set `SITE_URL` to the public address (e.g. `https://example.com.au`). Canonical links,
+`/sitemap.xml`, `/robots.txt` and structured data use it; without it they point at localhost.
+
 ## Core Routes
 
 - `/` home
@@ -25,13 +28,16 @@ Next.js + PocketBase MVP for Australian novated lease estimate and provider comp
 - `/novated-lease-calculator` (4 steps: car, details, estimate, editable assumptions), ending at the
   comparison with the same answers. The step is in the URL (`?step=results`); the answers are shared
   both ways in `sessionStorage` (`lib/journey.ts`), never the URL
-- `/novated-lease-comparison`
+- `/novated-lease-comparison` (landing page)
+- `/novated-lease-comparison/results` (noindex; needs a saved calculator journey, otherwise redirects to the calculator)
 - `/providers/[slug]`
 - `POST /api/leads` (quote requests: stored in PocketBase `leads`, then sent to the provider's webhook if set)
 - `/best-novated-lease-provider-australia`
 - `/novated-lease-without-phone-number`
 - `/novated-lease-brisbane`
 - `/ev-novated-lease-comparison`
+- `/guides` and `/guides/[topic]` (long-form guides; add one in `lib/guides.ts` plus a page under `app/guides/`)
+- `/sitemap.xml`, `/robots.txt`
 
 ## Design System
 

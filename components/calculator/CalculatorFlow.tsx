@@ -6,11 +6,9 @@ import { StepAssumptions } from "@/components/calculator/StepAssumptions";
 import { StepDetails } from "@/components/calculator/StepDetails";
 import { StepResults } from "@/components/calculator/StepResults";
 import { StepVehicle } from "@/components/calculator/StepVehicle";
-import { EstimateChip } from "@/components/ui/EstimateChip";
 import { ProgressDots } from "@/components/ui/ProgressDots";
 import { useJourney } from "@/components/ui/useJourney";
 import { estimateNovatedLease } from "@/lib/estimate";
-import { ASSUMPTIONS_REVIEWED } from "@/lib/mock-data";
 import { trackClientEvent } from "@/lib/tracking";
 import type { CalculatorAssumptions } from "@/lib/types";
 import { VEHICLES } from "@/lib/vehicles";
@@ -26,13 +24,6 @@ const BACK: Record<Exclude<Step, "vehicle">, { label: string; to: Step }> = {
   details: { label: "Back", to: "vehicle" },
   results: { label: "Edit", to: "details" },
   assumptions: { label: "Results", to: "results" },
-};
-
-const CHIP: Record<Step, string> = {
-  vehicle: "Estimate only · not financial advice",
-  details: "Estimate only · not financial advice",
-  results: `Estimate only · figures reviewed ${ASSUMPTIONS_REVIEWED}`,
-  assumptions: "Estimate only · change any number to update it",
 };
 
 type Props = {
@@ -77,7 +68,6 @@ export function CalculatorFlow({ defaultAssumptions }: Props) {
           )}
           <ProgressDots total={STEPS.length} current={STEPS.indexOf(step)} />
         </div>
-        <EstimateChip>{CHIP[step]}</EstimateChip>
       </div>
 
       <div className="page page-narrow journey-gate">

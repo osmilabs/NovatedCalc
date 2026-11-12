@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 export default function NovatedLeaseComparisonAustraliaPage() {
-  redirect("/novated-lease-comparison");
+  permanentRedirect("/novated-lease-comparison");
 }

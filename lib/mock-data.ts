@@ -1,3 +1,4 @@
+import { EV_BILL_STATUS } from "./guides";
 import type { CalculatorAssumptions, Provider, SeoPage } from "@/lib/types";
 
 export const ASSUMPTIONS_REVIEWED = "September 2026";
@@ -14,6 +15,10 @@ export const defaultAssumptions: CalculatorAssumptions = {
   registrationMonthly: 95,
 };
 
+/**
+ * Made-up providers so the comparison has something to show before real ones sign up.
+ * Each is flagged `sample`, which labels it in the UI and blocks quote requests.
+ */
 export const fallbackProviders: Provider[] = [
   {
     id: "prov-1",
@@ -33,6 +38,7 @@ export const fallbackProviders: Provider[] = [
     affiliateLink: "https://example.com/alpha-affiliate",
     summary: "Balanced inclusions and a solid digital self-service flow.",
     active: true,
+    sample: true,
   },
   {
     id: "prov-2",
@@ -51,6 +57,7 @@ export const fallbackProviders: Provider[] = [
     affiliateLink: "https://example.com/nova-affiliate",
     summary: "High quote responsiveness and strong broker support.",
     active: true,
+    sample: true,
   },
   {
     id: "prov-3",
@@ -70,6 +77,7 @@ export const fallbackProviders: Provider[] = [
     affiliateLink: "https://example.com/greenwheel-affiliate",
     summary: "EV-focused onboarding and practical packaging support.",
     active: true,
+    sample: true,
   },
   {
     id: "prov-4",
@@ -88,6 +96,7 @@ export const fallbackProviders: Provider[] = [
     affiliateLink: "https://example.com/summit-affiliate",
     summary: "Comprehensive package options with broad state coverage.",
     active: true,
+    sample: true,
   },
   {
     id: "prov-5",
@@ -107,6 +116,7 @@ export const fallbackProviders: Provider[] = [
     affiliateLink: "https://example.com/metro-affiliate",
     summary: "Simple direct model with reliable turnaround times.",
     active: true,
+    sample: true,
   },
   {
     id: "prov-6",
@@ -125,22 +135,71 @@ export const fallbackProviders: Provider[] = [
     affiliateLink: "https://example.com/brisbane-affiliate",
     summary: "QLD-local service tuned for fast quote follow-ups.",
     active: true,
+    sample: true,
   },
 ];
 
 export const fallbackSeoPages: SeoPage[] = [
   {
+    slug: "novated-lease-comparison",
+    keyword: "novated lease comparison",
+    title: "Novated Lease Comparison Australia",
+    description:
+      "Compare Australian novated lease providers on what they'd cost you each month, including fees, rates and inclusions.",
+    hero: "Compare novated lease providers on what they'd cost you",
+    body: "Tell us about the car and your salary, and we'll estimate what each provider would take from your pay. Every provider is costed the same way, so you can compare fees, rates and inclusions like for like. There's no sign-up, and your details only go to a provider if you ask them for a quote.",
+    faq: [
+      {
+        question: "Why do I need to enter my details first?",
+        answer:
+          "What a novated lease costs you depends on the car, your salary and how far you drive. Without them, any comparison would just be an average that may not apply to you.",
+      },
+      {
+        question: "Do I need to give my name or phone number to compare?",
+        answer: "No. Comparing is free and anonymous. Your salary stays in your browser.",
+      },
+      {
+        question: "Is the estimate the price I'll pay?",
+        answer:
+          "No. It's an estimate from each provider's published fees and rates. The provider sets the final figures after checking your employer, the car and your circumstances.",
+      },
+    ],
+  },
+  {
     slug: "best-novated-lease-provider-australia",
     keyword: "best novated lease provider Australia",
-    title: "Best Novated Lease Provider Australia - What Actually Matters",
+    title: "Best Novated Lease Provider in Australia: How to Choose (2026)",
     description:
-      "Compare provider inclusions, fees, and service quality with an estimate-first flow.",
-    hero: "Best Novated Lease Provider Australia",
-    body: "The best provider depends on your employer, state and service preference. Compare inclusions, setup fees, and quote speed before choosing your shortlist.",
+      "There's no single best provider. Here's what actually separates them: fees, interest rate, inclusions, service, and whether your employer works with them.",
+    hero: "How to choose the best novated lease provider for you",
+    body: [
+      "The best provider for a colleague may not be the best for you. What you'll pay depends on your car, salary and employer, and providers differ most on the things their ads mention least: the interest rate, the fees and what's in the running-cost budget.",
+      "Start with your employer. Many employers, especially in government and health, only work with providers on their own panel. Ask payroll which ones you can use before comparing anyone else.",
+      "Then compare the costs you can see. Most providers publish a setup fee and a monthly admin fee, and over a 4-year lease the difference between them can run to hundreds of dollars. Our comparison costs every provider the same way for your car and salary.",
+      "Ask for the interest rate in writing. Many quotes show only a weekly or fortnightly payment, which makes them hard to compare. A provider that won't state its rate is a reason to keep looking.",
+      "Check what's bundled and what it costs. Insurance, tyres and servicing bought through the provider may cost more than you'd pay yourself. Ask whether you can remove items or use your own insurer.",
+      "Finally, service. You'll deal with the provider for years: running-cost claims, end-of-lease options, changing jobs. Look at how you can reach them and how quickly they reply.",
+    ].join("\n\n"),
     faq: [
       {
         question: "Is there one best provider for everyone?",
-        answer: "No. Fit depends on employer panel access, service quality, and package structure.",
+        answer:
+          "No. It depends on your employer, your car and what you want included. The cheapest provider on fees may not offer the best rate or service for you.",
+      },
+      {
+        question: "Do I have to use the provider my employer suggests?",
+        answer:
+          "If your employer has a panel, you'll usually need to choose from it. If not, you can often use any provider that will work with your employer, so it's worth comparing.",
+      },
+      {
+        question: "Which fees should I compare?",
+        answer:
+          "The setup fee and the monthly admin fee. Added up over the lease, they're the clearest like-for-like number. Then ask each provider for its interest rate.",
+      },
+      {
+        question: "Can I negotiate with a provider?",
+        answer:
+          "You can ask. A competing quote for the same car gives you something concrete to point to.",
       },
     ],
   },
@@ -173,28 +232,67 @@ export const fallbackSeoPages: SeoPage[] = [
   {
     slug: "novated-lease-brisbane",
     keyword: "novated lease Brisbane",
-    title: "Novated Lease Brisbane Comparison",
-    description: "Compare Brisbane-friendly providers on service model and responsiveness.",
-    hero: "Novated Lease Brisbane",
-    body: "Focus on QLD support, turnaround time, and EV expertise where relevant.",
+    title: "Novated Lease Brisbane and Queensland: Compare Providers",
+    description:
+      "Compare novated lease providers that work with Queensland employers on fees, inclusions and service. Free, and no phone number needed.",
+    hero: "Novated leasing in Brisbane and Queensland",
+    body: [
+      "A novated lease works the same way in Brisbane as anywhere in Australia: your employer pays for the car from your salary before tax. Income tax, GST and the electric car exemption are federal rules, so the saving doesn't depend on your state.",
+      "What does vary by state is running costs. Queensland registration (which includes CTP insurance), fuel prices and insurance premiums all feed into your running-cost budget, so check those line items reflect Queensland prices.",
+      "Not every provider works with every employer. Government, health and university employers often use a set panel of providers, so ask payroll which ones you can use.",
+      "In our comparison you can filter to providers that operate in Queensland, then compare their fees and inclusions for your car and salary.",
+    ].join("\n\n"),
     faq: [
       {
-        question: "Do all providers support Brisbane employers?",
-        answer: "No. Check each profile for state coverage and employer panel compatibility.",
+        question: "Do all providers support Queensland employers?",
+        answer:
+          "No. Check each provider's profile for the states it covers, and ask your employer whether it uses a panel.",
+      },
+      {
+        question: "Is the tax saving different in Queensland?",
+        answer:
+          "No. Income tax, GST and FBT are federal, so the saving works the same as in other states. Only running costs like registration and fuel differ.",
+      },
+      {
+        question: "Can I get an electric car on a novated lease in Brisbane?",
+        answer:
+          "Yes. The FBT exemption for eligible electric cars applies across Australia.",
       },
     ],
   },
   {
     slug: "ev-novated-lease-comparison",
     keyword: "EV novated lease comparison",
-    title: "EV Novated Lease Comparison - Estimate Costs and FBT Impact",
-    description: "Compare EV novated lease providers with estimate-first inputs.",
-    hero: "EV Novated Lease Comparison",
-    body: "EV packaging can materially change tax outcomes depending on assumptions and provider setup.",
+    title: "EV Novated Lease Comparison: Compare Providers for Electric Cars",
+    description:
+      "Compare novated lease providers for electric cars. See what an EV lease would cost you with the FBT exemption, and what's proposed from April 2027.",
+    hero: "Compare novated leases for electric cars",
+    body: [
+      "Eligible electric cars are exempt from fringe benefits tax, so the whole lease and its running costs can come out of your pay before tax. For the same price, that usually makes an electric car lease worth thousands of dollars a year more than a petrol one.",
+      "To qualify, the car must be battery electric or hydrogen fuel cell, first held and used on or after 1 July 2022, and under $91,661 when it was first sold (the 2026–27 threshold). Plug-in hybrids only qualify for leases committed to before 1 April 2025.",
+      "Providers still differ on fees, interest rates and what they include, such as how charging is handled in the running-cost budget. Our comparison costs each one the same way for your car and salary.",
+      `Changes are proposed. A bill before Parliament would cap the full exemption at a $75,000 base value for leases committed to from 1 April 2027. ${EV_BILL_STATUS}`,
+    ].join("\n\n"),
     faq: [
       {
-        question: "Are EV novated leases always cheaper?",
-        answer: "Not always. It depends on salary, usage, car price, and provider fees.",
+        question: "Is an electric car novated lease cheaper than a petrol one?",
+        answer:
+          "For the same price, usually. The whole electric car lease can be paid before tax, while a petrol lease needs part paid after tax to avoid FBT.",
+      },
+      {
+        question: "Is there a catch with the EV exemption?",
+        answer:
+          "The car shows on your income statement as a reportable fringe benefit. You don't pay tax on it, but it counts in income tests such as HELP repayments and the Medicare levy surcharge.",
+      },
+      {
+        question: "Is the EV FBT exemption ending?",
+        answer:
+          `Not yet. A bill would limit the full exemption to cars with a base value of $75,000 or less from 1 April 2027. Leases committed to before then would keep it until they end. ${EV_BILL_STATUS}`,
+      },
+      {
+        question: "Can charging costs be included?",
+        answer:
+          "Usually. Ask each provider how they handle home and public charging in the running-cost budget.",
       },
     ],
   },

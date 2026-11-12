@@ -6,7 +6,7 @@ const slug = "novated-lease-without-phone-number";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await resolveSeoPage(slug);
-  return { title: page.title, description: page.description };
+  return { title: page.title, description: page.description, alternates: { canonical: `/${slug}` } };
 }
 
 export default async function NovatedLeaseWithoutPhonePage() {
