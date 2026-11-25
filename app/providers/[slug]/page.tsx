@@ -61,7 +61,7 @@ export default async function ProviderPage({ params }: Props) {
               <p className="figure figure-sm">{money(provider.setupFee)}</p>
             </div>
             <div className="stat">
-              <span className="label">Admin fee a month</span>
+              <span className="label">Monthly admin fee</span>
               <p className="figure figure-sm">{money(provider.monthlyAdminFee)}</p>
             </div>
             <div className="stat">

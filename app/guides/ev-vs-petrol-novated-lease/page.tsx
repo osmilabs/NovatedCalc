@@ -107,7 +107,7 @@ export default function Page() {
           body: (
             <>
               <p>
-                Two cars with the same $50,000 base value, each costing $16,000 a year in lease payments and running
+                Two cars with the same $50,000 base value, each costing $16,000 per year in lease payments and running
                 costs. The driver is on the 32% marginal rate (including Medicare). Simplified, ignoring GST.
               </p>
               <div className="table-wrap">

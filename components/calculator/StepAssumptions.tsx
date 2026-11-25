@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { getMarginalTaxRate, getResidualRate, LEASE_TERM_OPTIONS } from "@/lib/estimate";
+import {
+  CAR_LIMIT,
+  EV_FBT_EXEMPTION_THRESHOLD,
+  FBT_STATUTORY_RATE,
+  getMarginalTaxRate,
+  getResidualRate,
+  LEASE_TERM_OPTIONS,
+} from "@/lib/estimate";
 import { money, percent } from "@/lib/format";
 import { ASSUMPTIONS_REVIEWED } from "@/lib/mock-data";
 import type { CalculatorAssumptions } from "@/lib/types";
@@ -19,11 +26,10 @@ const GROUPS: Array<{ title: string; fields: Field[] }> = [
   {
     title: "Tax",
     fields: [
-      { key: "gstRate", label: "GST", sub: "Packaged payments don't carry GST.", unit: "%" },
       {
-        key: "evFbtExemptionBenefitRate",
-        label: "Electric car exemption",
-        sub: "Extra saving for EVs under the luxury car tax threshold.",
+        key: "gstRate",
+        label: "GST",
+        sub: "Your employer claims it back on the car's price and most running costs, not registration.",
         unit: "%",
       },
     ],
@@ -31,9 +37,9 @@ const GROUPS: Array<{ title: string; fields: Field[] }> = [
   {
     title: "Running costs",
     fields: [
-      { key: "insuranceMonthly", label: "Insurance a month", sub: "Average comprehensive cover.", unit: "$" },
-      { key: "maintenanceMonthly", label: "Servicing and tyres a month", sub: "Spread evenly across the year.", unit: "$" },
-      { key: "registrationMonthly", label: "Registration a month", sub: "Blended national average.", unit: "$" },
+      { key: "insuranceMonthly", label: "Monthly insurance", sub: "Average comprehensive cover.", unit: "$" },
+      { key: "maintenanceMonthly", label: "Monthly servicing and tyres", sub: "Spread evenly across the year.", unit: "$" },
+      { key: "registrationMonthly", label: "Monthly registration", sub: "Blended national average.", unit: "$" },
       {
         key: "fuelAndRunningRatePerKm",
         label: "Fuel or charging, per km",
@@ -45,7 +51,7 @@ const GROUPS: Array<{ title: string; fields: Field[] }> = [
   {
     title: "The lease itself",
     fields: [
-      { key: "adminFeeMonthly", label: "Provider admin fee a month", sub: "Charged to manage the lease.", unit: "$" },
+      { key: "adminFeeMonthly", label: "Monthly provider admin fee", sub: "Charged to manage the lease.", unit: "$" },
       {
         key: "novatedLeaseInterestRateAnnual",
         label: "Lease interest rate",
@@ -142,6 +148,23 @@ export function StepAssumptions({ assumptions, salary, onChange, onReset, onDone
             </div>
             <span className="list-row-value">{percent(getMarginalTaxRate(salary), 1)}</span>
           </div>
+          <div className="list-row">
+            <div>
+              <p className="list-row-label">After-tax contribution (FBT)</p>
+              <p className="list-row-sub">
+                Of the car&apos;s price, per year. Applies to petrol, diesel and hybrid cars, and electric cars over{" "}
+                {money(EV_FBT_EXEMPTION_THRESHOLD)}.
+              </p>
+            </div>
+            <span className="list-row-value">{percent(FBT_STATUTORY_RATE, 0)}</span>
+          </div>
+          <div className="list-row">
+            <div>
+              <p className="list-row-label">GST claimed on the price</p>
+              <p className="list-row-sub">Capped at the GST on the {money(CAR_LIMIT)} car limit.</p>
+            </div>
+            <span className="list-row-value">up to {money(Math.round(CAR_LIMIT / 11))}</span>
+          </div>
         </div>
       </section>
 
@@ -153,6 +176,11 @@ export function StepAssumptions({ assumptions, salary, onChange, onReset, onDone
             <li>Stamp duty, which varies by state.</li>
             <li>The actual rate a provider offers you.</li>
             <li>Insurance priced on your driving history.</li>
+            <li>Proposed changes to the electric car FBT exemption from 1 April 2027.</li>
+            <li>
+              How the reportable fringe benefit on your income statement affects HELP repayments, the Medicare levy
+              surcharge or family payments.
+            </li>
           </ul>
           <p className="text-sm mt">
             These will change your final number. Use this to decide whether a real quote is worth getting.

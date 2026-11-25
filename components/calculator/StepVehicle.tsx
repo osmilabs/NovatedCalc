@@ -91,7 +91,7 @@ export function StepVehicle({ vehicleId, input, onSelectVehicle, update, onNext 
 
       <div className="panel-flush mt-lg">
         <div className="figure-row">
-          <span className="label">{vehicleId ? "Or enter your own price" : "Your price"}</span>
+          <span className="label">{vehicleId ? "Car not listed? Enter your own price" : "Your price"}</span>
           <span className="text-sm">drive-away</span>
         </div>
         <p className="figure figure-md mt-sm">

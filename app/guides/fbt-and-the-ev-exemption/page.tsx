@@ -43,7 +43,7 @@ export default function Page() {
           body: (
             <p>
               Petrol, diesel and conventional hybrid leases use the <strong>employee contribution method</strong>. You
-              pay part of the car costs from after-tax pay, equal to the taxable value (20% of the base value a year).
+              pay part of the car costs from after-tax pay, equal to the taxable value (20% of the base value per year).
               That reduces the taxable value to nil, so your employer owes no FBT, and the rest of the costs come out
               before tax. The catch is that the after-tax part gets no income tax saving. See the{" "}
               <Link href={guideHref("ev-vs-petrol-novated-lease")}>EV vs petrol worked example</Link>.
@@ -88,7 +88,7 @@ export default function Page() {
                 <p className="label">Example</p>
                 <p>
                   A $50,000 base value × 20% = $10,000 taxable value. Grossed up by 1.8868, that&apos;s a reportable
-                  amount of about <strong>$18,868</strong> a year, less anything you contribute after tax.
+                  amount of about <strong>$18,868</strong> per year, less anything you contribute after tax.
                 </p>
               </div>
               <p>

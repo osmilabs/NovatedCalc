@@ -24,7 +24,6 @@ const journeySchema = z.object({
     adminFeeMonthly: z.number(),
     insuranceMonthly: z.number(),
     maintenanceMonthly: z.number(),
-    evFbtExemptionBenefitRate: z.number(),
     fuelAndRunningRatePerKm: z.number(),
     registrationMonthly: z.number(),
   }),

@@ -16,10 +16,6 @@ export async function getAssumptions(): Promise<CalculatorAssumptions> {
       adminFeeMonthly: record.adminFeeMonthly ?? defaultAssumptions.adminFeeMonthly,
       insuranceMonthly: record.insuranceMonthly ?? defaultAssumptions.insuranceMonthly,
       maintenanceMonthly: record.maintenanceMonthly ?? defaultAssumptions.maintenanceMonthly,
-      evFbtExemptionBenefitRate:
-        record.evFbtExemptionBenefitRate ??
-        record.evFbtDiscount ??
-        defaultAssumptions.evFbtExemptionBenefitRate,
       fuelAndRunningRatePerKm: record.fuelAndRunningRatePerKm ?? defaultAssumptions.fuelAndRunningRatePerKm,
       registrationMonthly: record.registrationMonthly ?? defaultAssumptions.registrationMonthly,
     };

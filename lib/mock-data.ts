@@ -1,7 +1,7 @@
 import { EV_BILL_STATUS } from "./guides";
 import type { CalculatorAssumptions, Provider, SeoPage } from "@/lib/types";
 
-export const ASSUMPTIONS_REVIEWED = "September 2026";
+export const ASSUMPTIONS_REVIEWED = "November 2026";
 
 export const defaultAssumptions: CalculatorAssumptions = {
   gstRate: 0.1,
@@ -10,7 +10,6 @@ export const defaultAssumptions: CalculatorAssumptions = {
   adminFeeMonthly: 49,
   insuranceMonthly: 120,
   maintenanceMonthly: 65,
-  evFbtExemptionBenefitRate: 0.12,
   fuelAndRunningRatePerKm: 0.11,
   registrationMonthly: 95,
 };

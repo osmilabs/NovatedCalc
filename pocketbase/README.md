@@ -31,7 +31,6 @@ Create these collections in PocketBase Admin UI:
    - `adminFeeMonthly` (number)
    - `insuranceMonthly` (number)
    - `maintenanceMonthly` (number)
-   - `evFbtDiscount` (number)
    - `fuelAndRunningRatePerKm` (number)
    - `registrationMonthly` (number)
    - `active` (bool)

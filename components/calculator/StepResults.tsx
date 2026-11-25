@@ -4,7 +4,8 @@ import Link from "next/link";
 import { Fragment, useState } from "react";
 import { Slider } from "@/components/ui/Slider";
 import { useCountUp } from "@/components/ui/useCountUp";
-import { LEASE_TERM_OPTIONS } from "@/lib/estimate";
+import { EV_FBT_EXEMPTION_THRESHOLD, LEASE_TERM_OPTIONS } from "@/lib/estimate";
+import { guideHref } from "@/components/guides/GuideArticle";
 import { amount, money, percent } from "@/lib/format";
 import type { CalculatorAssumptions, CalculatorInput, CalculatorResult } from "@/lib/types";
 
@@ -61,21 +62,24 @@ export function StepResults({
   const dearest = Math.max(...ways.map((way) => way.yearly));
 
   const numbersUsed = [
-    ["Insurance a month", money(assumptions.insuranceMonthly)],
-    ["Servicing and tyres a month", money(assumptions.maintenanceMonthly)],
-    ["Registration a month", money(assumptions.registrationMonthly)],
+    ["Car price", money(input.carPrice)],
+    ["Monthly insurance", money(assumptions.insuranceMonthly)],
+    ["Monthly servicing and tyres", money(assumptions.maintenanceMonthly)],
+    ["Monthly registration", money(assumptions.registrationMonthly)],
     ["Fuel or charging, per km", `${Number((assumptions.fuelAndRunningRatePerKm * 100).toFixed(1))}c`],
-    ["Provider admin fee a month", money(assumptions.adminFeeMonthly)],
+    ["Monthly provider admin fee", money(assumptions.adminFeeMonthly)],
     ["Lease interest rate", percent(assumptions.novatedLeaseInterestRateAnnual, 2)],
     ["Car loan interest rate", percent(assumptions.carLoanInterestRateAnnual, 2)],
     ["Balloon payment", percent(result.residualRate, 1)],
+    ["GST claimed on the price", money(result.gstCreditOnPrice)],
+    ["Monthly after-tax contribution", money(result.postTaxContributionMonthly)],
   ];
 
   return (
     <>
       <section className="section-hero">
         <p className="eyebrow">
-          {vehicleName ?? "Your car"} · {years} year lease
+          {vehicleName ?? "Your car"} · {money(input.carPrice)} · {years} year lease
         </p>
         <p className="label mt">{heroLabel}</p>
         <p className="hero-figure mt-xs">
@@ -84,19 +88,19 @@ export function StepResults({
         </p>
         <p className="text-sm mt-sm">
           Compared with a car loan, on a {percent(result.marginalTaxRate, 1)} tax rate.
-          {isEv ? " Electric cars under the luxury car tax threshold are FBT free." : null}
+          {result.fbtExempt ? " Electric cars under the luxury car tax threshold are FBT free." : null}
         </p>
 
         <div className="stat-grid mt-lg">
           <div className="stat">
-            <span className="label">Cost a month, after tax</span>
+            <span className="label">Monthly cost, after tax</span>
             <p className="figure figure-md">
               <span className="pre">$</span>
               {amount(monthlyCost)}
             </p>
           </div>
           <div className="stat">
-            <span className="label">{savesMoney ? "Saved a year" : "Extra a year"}</span>
+            <span className="label">{savesMoney ? "Yearly savings" : "Yearly extra cost"}</span>
             <p className={"figure figure-md" + (savesMoney ? " is-good" : "")}>
               <span className="pre">$</span>
               {amount(yearlyDifference)}
@@ -109,7 +113,7 @@ export function StepResults({
         <h2 className="eyebrow section-title">Where your monthly payment goes</h2>
         <div className="panel">
           <div className="figure-row">
-            <span className="label">Total a month, before tax</span>
+            <span className="label">Monthly total, before tax</span>
             <span className="figure figure-sm">
               <span className="pre">$</span>
               {amount(result.novatedLeaseMonthlyPackageCost)}
@@ -164,7 +168,7 @@ export function StepResults({
             </div>
           ))}
           <p className="text-sm mt-sm">
-            Cost per year, lower is better. The loan assumes {percent(assumptions.carLoanInterestRateAnnual, 2)} over{" "}
+            Yearly cost, lower is better. The loan assumes {percent(assumptions.carLoanInterestRateAnnual, 2)} over{" "}
             {yearsLabel}. None include the {money(result.residualDueAtEnd)} balloon payment at the end.
           </p>
         </div>
@@ -189,11 +193,11 @@ export function StepResults({
           <div className="divider" />
 
           <div className="panel-head">
-            <span className="label">Kilometres a year</span>
+            <span className="label">Yearly kilometres</span>
             <span className="value-mono">{amount(input.kilometresPerYear)} km</span>
           </div>
           <Slider
-            label="Kilometres a year"
+            label="Yearly kilometres"
             value={input.kilometresPerYear}
             min={5000}
             max={40000}
@@ -226,17 +230,33 @@ export function StepResults({
         <h2 className="eyebrow section-title">How we got this number</h2>
         <div className="panel mint-panel">
           <p className="text-body strong-ink">
-            Over {yearsLabel} you finance <b>{money(result.financedAmount)}</b> of{" "}
-            {vehicleName ? `the ${vehicleName}` : "your car"}, with <b>{money(result.residualDueAtEnd)}</b> left to pay
-            at the end. Because the payments come out of your salary before tax, you don&apos;t pay <b>GST</b> or{" "}
-            <b>{percent(result.marginalTaxRate, 1)} income tax</b> on them
-            {isEv ? (
-              <>
-                , and electric cars under the price cap are <b>FBT free</b>
-              </>
-            ) : null}
-            .
+            Over {yearsLabel} you finance <b>{money(result.financedAmount)}</b> of the{" "}
+            <b>{money(input.carPrice)}</b> {vehicleName ?? "car"}, with <b>{money(result.residualDueAtEnd)}</b> left to pay
+            at the end. Your employer claims back <b>{money(result.gstCreditOnPrice)}</b> of GST on the price, and the
+            GST on most running costs.
           </p>
+          {result.fbtExempt ? (
+            <p className="text-body mt-sm">
+              <b>FBT:</b> electric cars priced under {money(EV_FBT_EXEMPTION_THRESHOLD)} are exempt from fringe
+              benefits tax, so the whole package comes out of your pay before{" "}
+              <b>{percent(result.marginalTaxRate, 1)} income tax</b>. It still shows on your income statement as a
+              reportable fringe benefit, which can affect HELP repayments and the Medicare levy surcharge, and the
+              exemption is proposed to narrow from 1 April 2027.{" "}
+              <Link href={guideHref("fbt-and-the-ev-exemption")}>How the EV exemption works</Link>.
+            </p>
+          ) : (
+            <p className="text-body mt-sm">
+              <b>FBT:</b>{" "}
+              {isEv
+                ? `electric cars over ${money(EV_FBT_EXEMPTION_THRESHOLD)} aren't exempt from fringe benefits tax. `
+                : "petrol, diesel and hybrid cars attract fringe benefits tax. "}
+              To cancel it out, <b>{money(result.postTaxContributionMonthly)} per month</b> comes from your after-tax pay
+              (20% of the car&apos;s price per year, the employee contribution method), with no tax saving on that part.
+              The other <b>{money(result.preTaxDeductionMonthly)}</b> comes out before{" "}
+              <b>{percent(result.marginalTaxRate, 1)} income tax</b>.{" "}
+              <Link href={guideHref("fbt-and-the-ev-exemption")}>How FBT works on a novated lease</Link>.
+            </p>
+          )}
           <button
             type="button"
             className="btn btn-dark mt"

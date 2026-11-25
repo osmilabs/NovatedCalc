@@ -34,39 +34,76 @@ export function getMarginalTaxRate(salary: number) {
   return 0;
 }
 
+/** 2026-27 car limit. Your employer can claim back the GST on a car's price up to this amount. */
+export const CAR_LIMIT = 69883;
+
+/**
+ * 2026-27 luxury car tax threshold for fuel-efficient vehicles. Electric cars priced at or under it are exempt from
+ * FBT. Proposed rules would narrow this for leases starting from 1 April 2027; see the FBT guide.
+ */
+export const EV_FBT_EXEMPTION_THRESHOLD = 91661;
+
+/** FBT statutory formula: the taxable value of a car is 20% of its base value (GST-inclusive price) per year. */
+export const FBT_STATUTORY_RATE = 0.2;
+
+export function isFbtExempt(input: Pick<CalculatorInput, "vehicleType" | "carPrice">) {
+  return input.vehicleType === "ev" && input.carPrice <= EV_FBT_EXEMPTION_THRESHOLD;
+}
+
 export function estimateNovatedLease(
   input: CalculatorInput,
   assumptions: CalculatorAssumptions,
 ): CalculatorResult {
   const termMonths = Math.max(1, input.leaseTermMonths);
   const residualRate = getResidualRate(termMonths);
-  const residualDueAtEnd = input.carPrice * residualRate;
-  const financedAmount = Math.max(0, input.carPrice - residualDueAtEnd);
   const marginalTaxRate = getMarginalTaxRate(input.salary);
+  /** The GST part of a GST-inclusive amount, e.g. 1/11 at 10%. */
+  const gstIn = (amount: number) => (amount * assumptions.gstRate) / (1 + assumptions.gstRate);
+
+  // The employer claims back the GST on the price (up to the car limit), so the lease is written on what's left.
+  // The lease payments carry GST too, but the employer claims that back as well, so they cost the GST-free amount.
+  const gstCreditOnPrice = gstIn(Math.min(input.carPrice, CAR_LIMIT));
+  const leasedAmount = Math.max(0, input.carPrice - gstCreditOnPrice);
+  const residualDueAtEnd = leasedAmount * residualRate;
+  const financedAmount = leasedAmount - residualDueAtEnd;
 
   const nlMonthlyFinanceCost = monthlyPayment(
     financedAmount,
     assumptions.novatedLeaseInterestRateAnnual,
     termMonths,
   );
+  const fuelMonthly = (input.kilometresPerYear / 12) * assumptions.fuelAndRunningRatePerKm;
   const runningMonthly =
-    assumptions.insuranceMonthly +
-    assumptions.maintenanceMonthly +
-    assumptions.registrationMonthly +
-    (input.kilometresPerYear / 12) * assumptions.fuelAndRunningRatePerKm;
+    assumptions.insuranceMonthly + assumptions.maintenanceMonthly + assumptions.registrationMonthly + fuelMonthly;
 
   const nlMonthlyPackageCost = nlMonthlyFinanceCost + assumptions.adminFeeMonthly + runningMonthly;
-  const nlPreTaxSaving = nlMonthlyPackageCost * marginalTaxRate;
-  const nlGstSaving = nlMonthlyPackageCost * assumptions.gstRate;
-  const nlEvBenefit =
-    input.vehicleType === "ev" ? nlMonthlyPackageCost * assumptions.evFbtExemptionBenefitRate : 0;
-  const novatedLeaseMonthlyTakeHomeImpact =
-    nlMonthlyPackageCost - nlPreTaxSaving - nlGstSaving - nlEvBenefit;
+  // Registration is a government charge with no GST. Insurance stamp duty is ignored.
+  const runningGstCredit = gstIn(
+    assumptions.insuranceMonthly + assumptions.maintenanceMonthly + fuelMonthly + assumptions.adminFeeMonthly,
+  );
+  const packageCostExGst = nlMonthlyPackageCost - runningGstCredit;
 
-  const carLoanMonthlyFinanceCost = monthlyPayment(financedAmount, assumptions.carLoanInterestRateAnnual, termMonths);
+  // Employee contribution method: cars that aren't FBT exempt have part of the cost paid from after-tax pay, equal to
+  // the FBT taxable value, so the employer owes no FBT. The employer remits GST on that contribution.
+  const fbtExempt = isFbtExempt(input);
+  const postTaxContributionMonthly = fbtExempt
+    ? 0
+    : Math.min((FBT_STATUTORY_RATE * input.carPrice) / 12, packageCostExGst * (1 + assumptions.gstRate));
+  const preTaxDeductionMonthly =
+    packageCostExGst - postTaxContributionMonthly / (1 + assumptions.gstRate);
+  const novatedLeaseMonthlyTakeHomeImpact =
+    postTaxContributionMonthly + preTaxDeductionMonthly * (1 - marginalTaxRate);
+
+  // The loan and cash options leave the same balloon unpaid, so all three are compared on the same footing.
+  const loanFinancedAmount = Math.max(0, input.carPrice - residualDueAtEnd);
+  const carLoanMonthlyFinanceCost = monthlyPayment(
+    loanFinancedAmount,
+    assumptions.carLoanInterestRateAnnual,
+    termMonths,
+  );
   const carLoanMonthlyCost = carLoanMonthlyFinanceCost + runningMonthly;
-  // Paying cash for the same financed portion, spread over the term with no interest.
-  const cashMonthlyCost = financedAmount / termMonths + runningMonthly;
+  // Paying cash for the same amount, spread over the term with no interest.
+  const cashMonthlyCost = loanFinancedAmount / termMonths + runningMonthly;
 
   const monthlyDifference = carLoanMonthlyCost - novatedLeaseMonthlyTakeHomeImpact;
   const termDifference = monthlyDifference * termMonths;
@@ -83,7 +120,11 @@ export function estimateNovatedLease(
     novatedLeaseMonthlyFinanceCost: round(nlMonthlyFinanceCost),
     carLoanMonthlyFinanceCost: round(carLoanMonthlyFinanceCost),
     runningMonthlyCost: round(runningMonthly),
-    taxSavingMonthly: round(nlPreTaxSaving + nlGstSaving + nlEvBenefit),
+    taxSavingMonthly: round(nlMonthlyPackageCost - novatedLeaseMonthlyTakeHomeImpact),
+    fbtExempt,
+    postTaxContributionMonthly: round(postTaxContributionMonthly),
+    preTaxDeductionMonthly: round(preTaxDeductionMonthly),
+    gstCreditOnPrice: round(gstCreditOnPrice),
     cashMonthlyCost: round(cashMonthlyCost),
     financedAmount: round(financedAmount),
     marginalTaxRate,

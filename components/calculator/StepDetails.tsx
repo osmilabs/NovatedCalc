@@ -63,11 +63,11 @@ export function StepDetails({ input, update, onBack, onNext }: Props) {
 
         <div className="panel">
           <div className="panel-head">
-            <span className="label">Kilometres a year</span>
+            <span className="label">Yearly kilometres</span>
             <span className="value-mono">{amount(input.kilometresPerYear)} km</span>
           </div>
           <Slider
-            label="Kilometres a year"
+            label="Yearly kilometres"
             value={input.kilometresPerYear}
             min={5000}
             max={40000}

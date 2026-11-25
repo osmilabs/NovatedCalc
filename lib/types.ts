@@ -18,7 +18,6 @@ export type CalculatorAssumptions = {
   adminFeeMonthly: number;
   insuranceMonthly: number;
   maintenanceMonthly: number;
-  evFbtExemptionBenefitRate: number;
   fuelAndRunningRatePerKm: number;
   registrationMonthly: number;
 };
@@ -33,7 +32,16 @@ export type CalculatorResult = {
   novatedLeaseMonthlyFinanceCost: number;
   carLoanMonthlyFinanceCost: number;
   runningMonthlyCost: number;
+  /** The package cost less what actually leaves your take-home pay: income tax, Medicare levy and GST saved. */
   taxSavingMonthly: number;
+  /** Electric car under the luxury car tax threshold, so no after-tax contribution is needed. */
+  fbtExempt: boolean;
+  /** Paid from after-tax pay under the employee contribution method, so the employer owes no FBT. */
+  postTaxContributionMonthly: number;
+  /** Taken from pay before tax. */
+  preTaxDeductionMonthly: number;
+  /** GST the employer claims back on the car's price, which the lease doesn't have to finance. */
+  gstCreditOnPrice: number;
   cashMonthlyCost: number;
   financedAmount: number;
   marginalTaxRate: number;

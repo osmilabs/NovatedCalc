@@ -126,7 +126,7 @@ export function MyDetails({ input, vehicleId, update, onSelectVehicle }: Props) 
         />
         <NumberRow label="Salary before tax" prefix="$" value={input.salary} onChange={(salary) => update({ salary })} />
         <NumberRow
-          label="Distance a year"
+          label="Yearly distance"
           suffix=" km"
           value={input.kilometresPerYear}
           onChange={(kilometresPerYear) => update({ kilometresPerYear })}
