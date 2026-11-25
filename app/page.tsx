@@ -68,7 +68,7 @@ export default async function HomePage() {
               Compare novated leases <span className="headline-accent">in one place.</span>
             </h1>
             <p className="lede lede-lg">
-              novated.calc helps Australians work out what a novated lease would cost them and compare providers on
+              NovatedScout helps Australians work out what a novated lease would cost them and compare providers on
               fees, inclusions and service.
             </p>
             <div className="button-row">
@@ -165,7 +165,7 @@ export default async function HomePage() {
         <section className="home-section">
           <div className="text-center">
             <h2 className="headline headline-md home-heading">
-              <strong>Why use</strong> novated.calc?
+              <strong>Why use</strong> NovatedScout?
             </h2>
           </div>
           <div className="grid-3 mt-lg">

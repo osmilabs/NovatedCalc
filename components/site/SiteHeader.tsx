@@ -25,7 +25,7 @@ export function SiteHeader() {
           <span className="brand-dot" aria-hidden />
           <span>
             <b>novated</b>
-            <span className="brand-suffix">.calc</span>
+            <span className="brand-suffix">scout</span>
           </span>
         </Link>
         <nav className="nav-links" aria-label="Main">

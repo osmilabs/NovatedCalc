@@ -48,7 +48,7 @@ async function deliver(client: PocketBase, leadId: string, webhook: Webhook, pay
       headers: {
         "Content-Type": "application/json",
         [SIGNATURE_HEADER]: signBody(webhook.secret, body),
-        "X-NovatedCalc-Lead-Id": leadId,
+        "X-NovatedScout-Lead-Id": leadId,
       },
       body,
       signal: AbortSignal.timeout(WEBHOOK_TIMEOUT_MS),

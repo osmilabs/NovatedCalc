@@ -1,8 +1,8 @@
-# NovatedCalc lead webhook
+# NovatedScout lead webhook
 
-For providers receiving quote requests from NovatedCalc.
+For providers receiving quote requests from NovatedScout.
 
-Each lead is someone who compared providers on NovatedCalc, chose yours, and asked for a quote. They ticked
+Each lead is someone who compared providers on NovatedScout, chose yours, and asked for a quote. They ticked
 a consent box that names your company only, and the lead goes to you alone.
 
 ## Request
@@ -12,8 +12,8 @@ a consent box that names your company only, and the lead goes to you alone.
 | Header | Value |
 | --- | --- |
 | `Content-Type` | `application/json` |
-| `X-NovatedCalc-Signature` | `t=<unix seconds>,v1=<hex HMAC-SHA256>` |
-| `X-NovatedCalc-Lead-Id` | Same as `leadId` in the body. Use it to de-duplicate retries |
+| `X-NovatedScout-Signature` | `t=<unix seconds>,v1=<hex HMAC-SHA256>` |
+| `X-NovatedScout-Lead-Id` | Same as `leadId` in the body. Use it to de-duplicate retries |
 
 Reply with any `2xx` status within 8 seconds. Anything else counts as failed, and we forward the lead by hand.
 
@@ -59,7 +59,7 @@ than 5 minutes.
 ```js
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-export function verifyNovatedCalc(secret, rawBody, header, now = Math.floor(Date.now() / 1000)) {
+export function verifyNovatedScout(secret, rawBody, header, now = Math.floor(Date.now() / 1000)) {
   if (!header) return false;
   const parts = Object.fromEntries(header.split(",").map((p) => p.split("=", 2)));
   const t = Number(parts.t);

@@ -5,7 +5,7 @@ import { useLayoutEffect, useState, useSyncExternalStore } from "react";
 import { AdSlot } from "@/components/ads/AdSlot";
 import { AD_MEDIA, adsAllowedOn } from "@/lib/ads";
 
-const DISMISS_KEY = "novatedcalc:mobile-ad-dismissed";
+const DISMISS_KEY = "novatedscout:mobile-ad-dismissed";
 
 /** False on the server and before hydration, so ads only ever mount client-side at the right size. */
 function useMediaQuery(query: string) {

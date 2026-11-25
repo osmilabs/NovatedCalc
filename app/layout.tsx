@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono"
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "NovatedCalc - Novated Lease Calculator and Provider Comparison",
+  title: "NovatedScout - Novated Lease Calculator and Provider Comparison",
   description:
     "Work out what a novated lease would cost you and compare Australian providers on fees and service. Free, no sign-up.",
 };

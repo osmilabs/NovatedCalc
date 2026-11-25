@@ -6,7 +6,7 @@ import type { CalculatorAssumptions, CalculatorInput } from "./types";
  * Carries the calculator's answers to the provider comparison, in sessionStorage rather than the URL so
  * salary never reaches the server or analytics. Gone when the tab closes.
  */
-const KEY = "novatedcalc:journey:v1";
+const KEY = "novatedscout:journey:v1";
 
 export type Journey = {
   input: CalculatorInput;

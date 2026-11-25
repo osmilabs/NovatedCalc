@@ -3,7 +3,7 @@ import { PRIVACY } from "@/lib/privacy";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "What personal information novated.calc collects, why, who it's shared with, and your choices.",
+  description: "What personal information NovatedScout collects, why, who it's shared with, and your choices.",
   alternates: { canonical: "/privacy" },
 };
 
@@ -34,14 +34,14 @@ export default function PrivacyPage() {
         <header className="intro guide-head">
           <h1 className="headline headline-lg">Privacy policy</h1>
           <p className="lede">
-            What personal information novated.calc collects, why we collect it, and who it goes to.
+            What personal information NovatedScout collects, why we collect it, and who it goes to.
           </p>
           <p className="text-sm">Last updated {formatDate(PRIVACY.lastUpdated)}</p>
         </header>
 
         <div className="prose mt-lg">
           <p>
-            novated.calc is operated by {PRIVACY.operator}
+            NovatedScout is operated by {PRIVACY.operator}
             {PRIVACY.abn ? ` (${PRIVACY.abn})` : ""} (&ldquo;we&rdquo;, &ldquo;us&rdquo;). We handle personal
             information in line with the Australian Privacy Principles in the <i>Privacy Act 1988</i> (Cth).
           </p>

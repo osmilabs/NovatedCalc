@@ -25,9 +25,9 @@ describe("journey", () => {
   });
 
   it("ignores malformed or tampered data", () => {
-    sessionStorage.setItem("novatedcalc:journey:v1", JSON.stringify({ ...journey, input: { salary: "lots" } }));
+    sessionStorage.setItem("novatedscout:journey:v1", JSON.stringify({ ...journey, input: { salary: "lots" } }));
     expect(loadJourney()).toBeNull();
-    sessionStorage.setItem("novatedcalc:journey:v1", "{not json");
+    sessionStorage.setItem("novatedscout:journey:v1", "{not json");
     expect(loadJourney()).toBeNull();
   });
 

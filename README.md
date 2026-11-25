@@ -1,4 +1,4 @@
-# NovatedCalc MVP
+# NovatedScout MVP
 
 Next.js + PocketBase MVP for Australian novated lease estimate and provider comparison.
 

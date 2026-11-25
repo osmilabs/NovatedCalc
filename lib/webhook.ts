@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-export const SIGNATURE_HEADER = "X-NovatedCalc-Signature";
+export const SIGNATURE_HEADER = "X-NovatedScout-Signature";
 
 /** Signatures older than this are rejected, so a captured request can't be replayed later. */
 export const SIGNATURE_TOLERANCE_SECONDS = 300;
